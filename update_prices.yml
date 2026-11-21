@@ -1,0 +1,67 @@
+name: Update Jota Store Prices
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      full_scan:
+        description: "Forzar scan completo del catalogo (no solo refresh)"
+        type: boolean
+        default: false
+      snapshot_only:
+        description: "Solo republicar el snapshot del catalogo (rapido y barato)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Run update_prices.py
+        env:
+          FIREBASE_KEY_JSON: ${{ secrets.FIREBASE_KEY_JSON }}
+          CS2CAP_API_KEY: ${{ secrets.CS2CAP_API_KEY }}
+          GITHUB_ACTIONS_RUN: "github-actions-${{ github.run_number }}"
+          PYTHONUNBUFFERED: "1"
+        run: python scripts/update_prices.py ${{ github.event.inputs.snapshot_only == 'true' && '--snapshot-only' || (github.event.inputs.full_scan == 'true' && '--full' || '') }}
+      
+      - name: Report failure to heartbeat
+        if: failure()
+        env:
+          FIREBASE_KEY_JSON: ${{ secrets.FIREBASE_KEY_JSON }}
+        run: |
+          python -c "
+          import os, json
+          import firebase_admin
+          from firebase_admin import credentials, firestore
+          cred = credentials.Certificate(json.loads(os.environ['FIREBASE_KEY_JSON']))
+          firebase_admin.initialize_app(cred)
+          db = firestore.client()
+          db.collection('config').document('heartbeat').set({
+              'last_run': firestore.SERVER_TIMESTAMP,
+              'status': 'failed',
+              'source': 'github-actions-${{ github.run_number }}',
+              'run_url': 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+          }, merge=True)
+          "
