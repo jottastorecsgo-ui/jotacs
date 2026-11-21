@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas frecuentes · Jota Store</title>
+<meta name="description" content="Todo lo que necesitás saber sobre Jota Store: cómo comprar, métodos de pago, tiempos de entrega, cómo vender tus skins y más.">
+<meta name="theme-color" content="#0A121C">
+
+<link rel="icon" type="image/webp" href="assets/img/shared/jota_lobo_128.webp">
+<link rel="apple-touch-icon" href="assets/img/shared/jota_lobo_128.webp">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jota Store">
+<meta property="og:title" content="Preguntas frecuentes · Jota Store">
+<meta property="og:description" content="Todo lo que necesitás saber: cómo comprar, métodos de pago, tiempos de entrega y más.">
+<meta property="og:image" content="https://jotaweb.pages.dev/assets/img/shared/jota_logo.webp">
+<meta property="og:url" content="https://jotaweb.pages.dev/faq.html">
+<meta property="og:locale" content="es_AR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://apis.google.com" crossorigin>
+<link rel="preconnect" href="https://jota-store.firebaseapp.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet"></noscript>
+<style>
+  :root {
+    --bg: #0A121C;
+    --bg-deep: #050810;
+    --panel: #101E2C;
+    --panel-hover: #16283A;
+    --step-bg: #0D1826;
+    --border: rgba(255,255,255,0.08);
+    --celeste: #2FB6E8;
+    --celeste-light: #6FE0FF;
+    --celeste-glow: rgba(47,182,232,0.35);
+    --gold: #E8B93C;
+    --magenta: #FF2FD6;
+    --text: #F2F7FA;
+    --muted: #A9BCC9;
+    --dim: #5c7080;
+    --font-display: 'Russo One', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --cut: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;scroll-padding-top:var(--alto-header,0px)}
+  body{font-family:var(--font-body);background:radial-gradient(1100px 650px at 100% 0%,rgba(47,182,232,0.07),transparent 70%),radial-gradient(900px 600px at 0% 100%,rgba(232,185,60,0.045),transparent 70%),linear-gradient(180deg,#0A121C 0%,#08101A 100%);background-color:var(--bg);color:var(--text);font-size:16px;line-height:1.5;min-height:100vh;overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased}
+  a{color:var(--celeste);text-decoration:none}
+  ::selection{background:var(--celeste);color:var(--bg-deep)}
+
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;opacity:0.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  @keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes esquina{0%,100%{opacity:.4}50%{opacity:1}}
+
+
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 40px;background:rgba(10,18,28,0.88);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .logo-lockup{display:flex;align-items:center}
+  .logo-lockup img{height:60px;width:auto;filter:drop-shadow(0 0 18px rgba(47,182,232,0.5))}
+  .logo-texto{font-family:var(--font-display);font-size:26px;line-height:1;letter-spacing:.02em;color:#fff;margin-left:10px;white-space:nowrap;text-shadow:0 0 18px rgba(47,182,232,0.35)}
+  .logo-texto b{font-weight:400;background:linear-gradient(90deg,#6FE0FF 0%,#BDEBF5 45%,#FFD97A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+  .logo-texto.compacta{display:inline-flex;flex-direction:column;font-size:13px;line-height:1.08;margin-left:7px}
+  .logo-texto.oculta{display:none}
+  .nav-desktop{display:flex;align-items:center;gap:10px}
+  .nav-btn{font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--panel);padding:10px 22px;clip-path:var(--cut);border:1px solid var(--border);transition:background .2s,color .2s;cursor:pointer}
+  .nav-btn:hover{background:var(--panel-hover);color:var(--celeste-light)}
+  .nav-btn.active{font-weight:700;color:var(--bg-deep);background:var(--celeste);border-color:transparent;box-shadow:0 0 18px var(--celeste-glow)}
+
+  .header-right{display:flex;align-items:center;gap:12px}
+  .auth-wrapper{position:relative}
+  .auth-btn{font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--panel);border:1px solid var(--border);padding:11px 26px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 100%,12px 100%);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:filter .2s;font-family:inherit}
+  .auth-btn.login{color:#fff;background:linear-gradient(90deg,var(--celeste),var(--magenta));border-color:transparent;box-shadow:0 0 22px var(--celeste-glow)}
+  .auth-btn:hover{filter:brightness(1.12)}
+  .auth-btn img{width:22px;height:22px;border-radius:50%}
+  .auth-btn .name{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:none;letter-spacing:0}
+  .user-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--panel);border:1px solid rgba(47,182,232,0.35);padding:6px;min-width:220px;display:none;box-shadow:0 10px 40px rgba(0,0,0,0.6),0 0 18px rgba(47,182,232,0.15);z-index:80}
+  .user-menu.open{display:block}
+  .user-menu-email{font-size:13px;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);margin-bottom:4px;word-break:break-all}
+  .user-menu-item{padding:10px 14px;cursor:pointer;font-size:15px;font-weight:600;transition:background .2s;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+  .user-menu-item:hover{background:var(--panel-hover);color:var(--celeste-light)}
+
+  .ham-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 10px;cursor:pointer;align-items:center;justify-content:center;display:none}
+  .mobile-nav{display:none;flex-basis:100%;flex-direction:column;border-top:1px solid var(--border);margin-top:10px}
+  .mobile-nav.open{display:flex}
+  .mobile-nav-link{height:48px;padding:0 4px;display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);transition:background .2s,color .2s}
+  .mobile-nav-link:last-child{border-bottom:none}
+  .mobile-nav-link:hover,.mobile-nav-link:active{background:rgba(47,182,232,0.08);color:var(--text)}
+  .mobile-nav-link small{font-size:10px;color:var(--magenta);letter-spacing:.1em}
+
+  .faq-hero{position:relative;z-index:5;overflow:hidden;background:radial-gradient(130% 120% at 16% 18%,#0E2436 0%,#0A121C 52%,#050810 100%);padding:56px 40px 60px;border-bottom:1px solid var(--border)}
+  .faq-hero-diag{position:absolute;top:-10%;left:60%;width:3px;height:120%;transform:rotate(15.5deg);background:linear-gradient(180deg,transparent,var(--celeste) 35%,var(--celeste-light) 50%,var(--gold) 65%,transparent);box-shadow:0 0 24px rgba(47,182,232,0.6);z-index:2;pointer-events:none}
+  .faq-shard{position:absolute;width:110px;height:110px;z-index:2;pointer-events:none;animation:esquina 3.5s ease-in-out infinite}
+  .faq-shard.tl{top:0;left:0;background:var(--celeste);clip-path:polygon(0 0,100% 0,0 100%);opacity:.5}
+  .faq-shard.br{bottom:0;right:0;width:150px;height:150px;background:var(--gold);clip-path:polygon(100% 100%,100% 0,0 100%);opacity:.4;animation-delay:.8s}
+  .faq-hero-lobo{position:absolute;top:50%;right:2%;transform:translateY(-50%);width:440px;height:auto;opacity:.12;z-index:1;pointer-events:none;animation:flotar 6s ease-in-out infinite}
+  .faq-hero-inner{position:relative;z-index:3;max-width:1240px;margin:0 auto}
+  .faq-title{margin:12px 0 0;font-family:var(--font-display);font-weight:400;font-size:66px;line-height:.94;letter-spacing:.01em;text-transform:uppercase;color:var(--text);text-align:center}
+  .faq-title span{display:block;background:linear-gradient(90deg,var(--celeste-light),var(--celeste));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 24px rgba(47,182,232,0.45))}
+  .faq-hero-sub{margin:20px 0 26px;font-weight:500;font-size:19px;color:var(--muted);max-width:520px}
+  .faq-hero-sub b{color:var(--text);font-weight:700}
+
+  .faq-search-row{display:flex;gap:14px;align-items:stretch;max-width:720px;flex-wrap:wrap}
+  .search-wrap{position:relative;flex:1;min-width:260px}
+  .search-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--dim);pointer-events:none;display:flex}
+  .search-icon svg{width:20px;height:20px}
+  .search-input{width:100%;background:rgba(13,24,38,0.82);border:1px solid rgba(47,182,232,0.4);color:var(--text);padding:17px 48px 17px 52px;font-family:inherit;font-size:17px;font-weight:500;outline:none;clip-path:var(--cut);transition:border-color .2s,box-shadow .2s;backdrop-filter:blur(6px)}
+  .search-input::placeholder{color:var(--dim)}
+  .search-input:focus{border-color:var(--celeste);box-shadow:0 0 0 3px var(--celeste-glow)}
+  .search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--panel);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;cursor:pointer;display:none;align-items:center;justify-content:center;font-family:inherit;font-size:16px;line-height:1;border-radius:50%;transition:border-color .2s,color .2s}
+  .search-clear:hover{border-color:var(--magenta);color:var(--magenta)}
+  .search-clear.show{display:flex}
+  .consultar-btn{display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.09em;text-transform:uppercase;color:var(--bg-deep);background:var(--celeste);padding:16px 26px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%);box-shadow:0 0 26px rgba(47,182,232,0.4);transition:filter .2s;white-space:nowrap}
+  .consultar-btn:hover{filter:brightness(1.12);color:var(--bg-deep)}
+  .consultar-btn .dia{color:var(--bg-deep)}
+
+  .faq-cats{position:sticky;top:var(--alto-header,0px);z-index:40;background:rgba(5,8,16,0.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+  .cats-track{display:flex;gap:7px;max-width:1240px;margin:0 auto;padding:12px 22px;overflow-x:auto;scrollbar-width:none}
+  .cats-track::-webkit-scrollbar{display:none}
+  .cat-chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:9px 14px;clip-path:var(--cut);cursor:pointer;transition:background .2s,color .2s,border-color .2s;white-space:nowrap}
+  .cat-chip:hover{background:var(--panel-hover);color:var(--text)}
+  .cat-chip.active{color:var(--bg-deep);background:var(--celeste);border-color:transparent;box-shadow:0 0 16px var(--celeste-glow)}
+  .cat-chip .cat-count{font-weight:700;font-size:11px;min-width:18px;height:18px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg-deep);color:var(--celeste);border-radius:2px}
+  .cat-chip.active .cat-count{background:rgba(5,8,16,0.28);color:var(--bg-deep)}
+  .cat-short{display:none}
+
+  main{position:relative;z-index:5;max-width:1080px;margin:0 auto;padding:44px 40px 20px}
+  .faq-sec{scroll-margin-top:72px;margin-bottom:38px}
+  .sec-head{display:flex;align-items:center;gap:18px;margin-bottom:18px}
+  .sec-num{font-family:var(--font-display);font-size:44px;line-height:1;color:var(--sec,var(--celeste));filter:drop-shadow(0 0 16px var(--sec,var(--celeste)));flex-shrink:0}
+  .sec-title{font-family:var(--font-display);font-weight:400;font-size:26px;text-transform:uppercase;letter-spacing:.02em;color:var(--text);white-space:nowrap}
+  .sec-title .t-short{display:none}
+  .sec-line{flex:1;height:2px;background:linear-gradient(90deg,var(--sec,var(--celeste)),transparent);opacity:.55;min-width:20px}
+
+  .faq-list{display:flex;flex-direction:column;gap:10px}
+  .faq-item{background:var(--panel);border:1px solid var(--border);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);transition:border-color .2s;scroll-margin-top:74px}
+  .faq-item:hover{border-color:rgba(47,182,232,0.3)}
+  .faq-item.open{border-color:var(--sec,var(--celeste))}
+  .faq-item.hidden{display:none}
+  .faq-q{width:100%;text-align:left;background:transparent;border:none;color:var(--text);font-family:inherit;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;font-size:17px;font-weight:600;transition:color .2s}
+  .faq-q:hover{color:var(--celeste-light)}
+  .faq-q-text{flex:1;min-width:0}
+  .faq-q-ic{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--sec,var(--celeste));border:1px solid var(--border);background:var(--bg-deep);transition:transform .25s,background .2s}
+  .faq-q-ic svg{width:15px;height:15px}
+  .faq-item.open .faq-q-ic{transform:rotate(180deg);background:var(--sec,var(--celeste));color:var(--bg-deep);border-color:transparent}
+  .faq-a{display:none;padding:0 20px 20px;font-size:15.5px;color:var(--muted);line-height:1.7}
+  .faq-item.open .faq-a{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .faq-a strong{color:var(--text);font-weight:700}
+  .faq-a a{color:var(--celeste);font-weight:600}
+  .faq-a a:hover{color:var(--celeste-light);text-decoration:underline}
+  .faq-a p{margin-bottom:11px}
+  .faq-a p:last-child{margin-bottom:0}
+  .faq-a ol,.faq-a ul{margin:10px 0 10px 22px}
+  .faq-a li{margin-bottom:6px}
+  .faq-a code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;background:var(--bg-deep);border:1px solid var(--border);padding:1px 6px;color:var(--celeste-light);border-radius:3px;word-break:break-all}
+  .faq-a .callout{margin:14px 0;padding:12px 16px;border-left:3px solid;font-size:14.5px;line-height:1.6;background:var(--bg-deep)}
+  .faq-a .callout b{color:inherit;font-weight:700}
+  .faq-a .callout.info{border-color:var(--celeste);color:#bfe6f7}
+  .faq-a .callout.warn{border-color:var(--gold);color:#f4dfa0}
+  .faq-a .callout.danger{border-color:var(--magenta);color:#f9b8ea}
+  mark{background:rgba(232,185,60,0.4);color:var(--text);border-radius:2px;padding:0 2px}
+
+  .is-hidden{display:none !important}
+  .faq-empty{text-align:center;padding:64px 28px;background:var(--panel);border:1px solid var(--border);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+  .faq-empty-ic{font-family:var(--font-display);font-size:38px;color:var(--celeste);filter:drop-shadow(0 0 18px var(--celeste-glow));margin-bottom:14px}
+  .faq-empty h2{font-family:var(--font-display);font-weight:400;font-size:24px;text-transform:uppercase;color:var(--text);margin-bottom:12px}
+  .faq-empty p{font-size:16px;color:var(--muted);max-width:52ch;margin:0 auto;line-height:1.65}
+  @media (max-width:900px){
+    .faq-empty{padding:44px 20px}
+    .faq-empty h2{font-size:19px}
+    .faq-empty p{font-size:15px}
+  }
+
+  .no-results{display:none;text-align:center;padding:54px 24px;color:var(--muted);background:var(--panel);border:1px solid var(--border);clip-path:var(--cut)}
+  .no-results.show{display:block}
+  .no-results-ic{font-family:var(--font-display);font-size:34px;color:var(--celeste);margin-bottom:10px}
+  .no-results h3{font-family:var(--font-display);font-weight:400;font-size:20px;text-transform:uppercase;color:var(--text);margin-bottom:8px}
+  .no-results p{font-size:15px}
+
+  .faq-cta-wrap{position:relative;z-index:5;max-width:1080px;margin:20px auto 0;padding:0 40px}
+  .faq-cta{position:relative;overflow:hidden;padding:2px;background:linear-gradient(120deg,rgba(47,182,232,0.55),rgba(255,47,214,0.3) 60%,rgba(232,185,60,0.4));clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+  .faq-cta-inner{position:relative;background:radial-gradient(120% 140% at 80% 10%,#12283a 0%,#0A121C 60%);padding:40px 44px;clip-path:polygon(0 0,calc(100% - 21px) 0,100% 21px,100% 100%,21px 100%,0 calc(100% - 21px));text-align:center}
+  .faq-cta-lobo{position:absolute;bottom:-40px;right:-30px;width:260px;height:auto;opacity:.08;pointer-events:none}
+  .faq-cta h2{position:relative;font-family:var(--font-display);font-weight:400;font-size:30px;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+  .faq-cta h2 span{background:linear-gradient(90deg,var(--celeste-light),var(--celeste));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .faq-cta p{position:relative;font-weight:500;font-size:16px;color:var(--muted);max-width:460px;margin:0 auto 24px}
+  .faq-cta-btns{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .cta-btn{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.09em;text-transform:uppercase;padding:14px 28px;transition:filter .2s,background .2s,color .2s}
+  .cta-btn svg{width:18px;height:18px;fill:currentColor}
+  .cta-btn.ig{color:var(--bg-deep);background:var(--celeste);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%);box-shadow:0 0 24px rgba(47,182,232,0.4)}
+  .cta-btn.ig:hover{filter:brightness(1.12);color:var(--bg-deep)}
+  .cta-btn.fb{color:var(--text);background:var(--panel);border:1px solid rgba(47,182,232,0.5);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%)}
+  .cta-btn.fb:hover{background:var(--panel-hover);color:var(--celeste-light)}
+
+  footer{position:relative;z-index:5;padding:56px 40px 40px;margin-top:56px;background:var(--bg-deep);border-top:1px solid rgba(47,182,232,0.18);overflow:hidden}
+  .footer-lobo{position:absolute;top:50%;right:-90px;transform:translateY(-50%);width:360px;height:auto;opacity:.07;pointer-events:none}
+  .footer-grid{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;max-width:1080px;margin:0 auto}
+  .footer-brand{max-width:320px}
+  .footer-brand img{height:70px;width:auto;filter:drop-shadow(0 0 16px rgba(47,182,232,0.4))}
+  .footer-brand p{margin:14px 0 0;font-weight:500;font-size:16px;color:var(--muted)}
+  .footer-col-title{display:block;font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--celeste);margin-bottom:14px}
+  .footer-link{display:block;font-weight:500;font-size:16px;color:var(--muted);margin-bottom:9px;transition:color .2s}
+  .footer-link:hover{color:var(--celeste-light)}
+  .footer-link.pronto{cursor:default}
+  .footer-link.pronto:hover{color:var(--muted)}
+  .footer-link.pronto small{font-size:11px;color:var(--magenta);letter-spacing:.08em}
+  .footer-socials{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  .footer-social-btn{display:inline-flex;font-weight:700;font-size:13px;color:var(--bg-deep);background:var(--celeste);padding:11px 18px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%);transition:filter .2s}
+  .footer-social-btn:hover{filter:brightness(1.1);color:var(--bg-deep)}
+  .footer-bottom{position:relative;z-index:2;margin-top:40px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-weight:500;font-size:13px;letter-spacing:.05em;color:#5c6d78}
+
+  :focus-visible{outline:2px solid var(--celeste);outline-offset:2px}
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-track{background:var(--bg-deep);border-left:1px solid var(--border)}
+  ::-webkit-scrollbar-thumb{background:var(--celeste)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--celeste-light)}
+
+  @media (max-width:1440px){
+    .nav-desktop{gap:7px}
+    .nav-btn{padding:10px 14px;font-size:14px;letter-spacing:.05em}
+  }
+
+  @media (max-width:1200px){
+    .nav-desktop{display:none}
+    .ham-btn{display:flex}
+    header{padding:10px 20px}
+    .faq-hero{padding:44px 22px 48px}
+    .faq-title{font-size:52px}
+  }
+
+  @media (max-width:900px){
+    header{padding:8px 14px}
+    .logo-lockup img{height:44px}
+    .auth-btn{font-size:13px;padding:11px 20px}
+
+    .faq-hero{padding:30px 18px 36px}
+    .faq-hero-lobo{width:240px;opacity:.1;right:-6%}
+    .faq-shard{width:60px;height:60px}
+    .faq-shard.br{width:80px;height:80px}
+    .faq-title{font-size:38px}
+    .faq-hero-sub{font-size:16px;margin:14px 0 20px}
+    .consultar-btn{display:none}
+    .search-input{font-size:16px;padding:15px 46px 15px 48px}
+
+    .cats-track{padding:10px 16px;gap:7px}
+    .cat-full{display:none}
+    .cat-short{display:inline}
+    .cat-chip{font-size:12px;padding:8px 13px}
+
+    main{padding:30px 18px 12px}
+    .faq-sec{margin-bottom:30px}
+    .sec-num{font-size:34px}
+    .sec-title{font-size:20px}
+    .sec-title .t-full{display:none}
+    .sec-title .t-short{display:inline}
+    .faq-q{font-size:15.5px;padding:15px 16px;gap:12px}
+    .faq-a{font-size:15px;padding:0 16px 16px}
+
+    .faq-cta-wrap{padding:0 18px}
+    .faq-cta-inner{padding:30px 22px}
+    .faq-cta h2{font-size:23px}
+    .faq-cta p{font-size:15px}
+    .faq-cta-btns{flex-direction:column}
+    .cta-btn{justify-content:center}
+    .cta-btn.ig{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 100%,0 100%)}
+    .cta-btn.fb{clip-path:polygon(12px 0,100% 0,100% 100%,0 100%)}
+
+    footer{padding:36px 18px 28px;margin-top:40px}
+    .footer-lobo{display:none}
+    .footer-grid{flex-direction:column}
+    .footer-brand img{height:52px}
+    .footer-socials{flex-direction:row;flex-wrap:wrap}
+    body::after{display:none}
+  }
+
+  @media (max-width:420px){
+    .faq-title{font-size:32px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important}
+  }
+  @media (max-width:600px){
+    header{padding:8px 12px}
+    .logo-lockup img{height:42px}
+    .logo-texto{font-size:21px;margin-left:8px}
+    .logo-texto.compacta{font-size:11px}
+    .ham-btn{width:42px;height:40px;padding:0}
+    .auth-btn{height:40px;padding:0 16px;font-size:13px}
+    .auth-btn .name{display:none}
+  }
+</style>
+<link rel="stylesheet" href="assets/js/avatares.css">
+<script src="assets/js/avatares.js"></script>
+</head>
+<body>
+
+<header>
+  <a class="logo-lockup" href="index.html">
+    <img src="assets/img/shared/jota_logo_320.webp" alt="" width="157" height="137">
+    <span class="logo-texto">JOTA<b>STORE</b></span>
+  </a>
+  <nav class="nav-desktop">
+    <a class="nav-btn" href="index.html">Inicio</a>
+    <a class="nav-btn" href="comprar.html">Comprar</a>
+    <a class="nav-btn" href="vender.html">Vender</a>
+    <a class="nav-btn" href="battle-pass.html">Battle Pass</a>
+    <a class="nav-btn" href="sorteos.html">Sorteos Jota</a>
+    <a class="nav-btn active" href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-right">
+    <button class="ham-btn" id="hamBtn" type="button" onclick="toggleMobileMenu()" aria-label="Menú" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="auth-wrapper">
+      <button class="auth-btn login" id="authBtn" onclick="handleAuthClick()">Ingresar</button>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-email" id="userMenuEmail"></div>
+        <a class="user-menu-item" href="mi-cuenta.html">Mi cuenta</a>
+        <div class="user-menu-item" onclick="signOutUser()">Cerrar sesión</div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a class="mobile-nav-link" href="index.html">Inicio</a>
+    <a class="mobile-nav-link" href="comprar.html">Comprar</a>
+    <a class="mobile-nav-link" href="vender.html">Vender</a>
+    <a class="mobile-nav-link" href="battle-pass.html">Battle Pass</a>
+    <a class="mobile-nav-link" href="sorteos.html">Sorteos Jota</a>
+    <a class="mobile-nav-link" href="faq.html">FAQ</a>
+  </div>
+</header>
+<script src="assets/js/marca.js"></script>
+
+<section class="faq-hero">
+  <div class="faq-hero-diag" aria-hidden="true"></div>
+  <div class="faq-shard tl" aria-hidden="true"></div>
+  <div class="faq-shard br" aria-hidden="true"></div>
+  <img class="faq-hero-lobo" src="assets/img/shared/jota_lobo.webp" alt="" width="748" height="569">
+
+  <div class="faq-hero-inner">
+    <h1 class="faq-title">Preguntas <span>Frecuentes</span></h1>
+    <p class="faq-hero-sub">Buscá tu duda o escribinos directo, <b>respondemos rápido</b>.</p>
+    <div class="faq-search-row">
+      <div class="search-wrap">
+        <span class="search-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" class="search-input" id="faqSearch" aria-label="Buscar en preguntas frecuentes" placeholder="Buscar una pregunta..." autocomplete="off" inputmode="search" enterkeyhint="search">
+        <button class="search-clear" id="searchClear" type="button" onclick="clearSearch()" aria-label="Limpiar búsqueda">×</button>
+      </div>
+      <a class="consultar-btn" href="https://www.instagram.com/jotastorecsgo/?hl=es" target="_blank" rel="noopener"><span class="dia">◆</span> Consultar directo</a>
+    </div>
+  </div>
+</section>
+
+<nav class="faq-cats" aria-label="Categorías">
+  <div class="cats-track" id="catsTrack"></div>
+</nav>
+
+<main>
+  <div id="faqBody"></div>
+  <div class="no-results" id="noResults">
+    <div class="no-results-ic">◆</div>
+    <h3>Sin resultados</h3>
+    <p>Probá con otras palabras o escribinos por redes y te ayudamos directamente.</p>
+  </div>
+</main>
+
+<div class="faq-cta-wrap">
+  <div class="faq-cta">
+    <div class="faq-cta-inner">
+      <img class="faq-cta-lobo" src="assets/img/shared/jota_lobo.webp" alt="" width="748" height="569" loading="lazy">
+      <h2>¿No encontraste lo que <span>buscabas</span>?</h2>
+      <p>Escribinos por nuestras redes y te respondemos. Atendemos consultas todos los días.</p>
+      <div class="faq-cta-btns">
+        <a class="cta-btn ig" href="https://www.instagram.com/jotastorecsgo/?hl=es" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="cta-btn fb" href="https://www.facebook.com/JotaStoreCsgo" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <img class="footer-lobo" src="assets/img/shared/jota_lobo.webp" alt="" width="748" height="569" loading="lazy">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/img/shared/jota_logo_320.webp" alt="Jota Store" width="183" height="160" loading="lazy">
+      <p>Compra y venta de skins de CS2 al mejor precio. Argentina, entrega al toque.</p>
+    </div>
+    <div>
+      <span class="footer-col-title">Tienda</span>
+      <a class="footer-link" href="comprar.html">Comprar skins</a>
+      <a class="footer-link" href="vender.html">Vender skins</a>
+      <a class="footer-link" href="battle-pass.html">Battle Pass</a>
+      <a class="footer-link" href="sorteos.html">Sorteos Jota</a>
+    </div>
+    <div>
+      <span class="footer-col-title">Ayuda</span>
+      <a class="footer-link" href="faq.html">FAQ</a>
+      <a class="footer-link" href="faq.html#pagos">Medios de pago</a>
+      <a class="footer-link" href="faq.html#jota">Términos</a>
+    </div>
+    <div>
+      <span class="footer-col-title">Seguinos</span>
+      <div class="footer-socials">
+        <a class="footer-social-btn" href="https://www.instagram.com/jotastorecsgo/" target="_blank" rel="noopener">◈ Instagram</a>
+        <a class="footer-social-btn" href="https://www.facebook.com/JotaStoreCsgo" target="_blank" rel="noopener">◈ Facebook</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 JOTA STORE · @JOTASTORECSGO · No afiliado a Valve Corporation</div>
+</footer>
+
+<script>
+function toggleMobileMenu(){var nav=document.getElementById('mobileNav'),btn=document.getElementById('hamBtn'),open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',String(open));}
+document.addEventListener('click',function(e){var nav=document.getElementById('mobileNav'),btn=document.getElementById('hamBtn');if(!nav||!btn)return;if(!nav.contains(e.target)&&!btn.contains(e.target)){nav.classList.remove('open');btn.setAttribute('aria-expanded','false');}});
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2h9G0Z-2kMnzpm9njmbgvh8CDJVsIW8k",
+  authDomain: "jota-store.firebaseapp.com",
+  projectId: "jota-store",
+  storageBucket: "jota-store.firebasestorage.app",
+  messagingSenderId: "513903959883",
+  appId: "1:513903959883:web:b28be406ba0ec4ffb492ce"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  updateAuthUI();
+});
+
+function updateAuthUI() {
+  const btn = document.getElementById('authBtn');
+  const menu = document.getElementById('userMenu');
+  const menuEmail = document.getElementById('userMenuEmail');
+  if (currentUser) {
+    btn.classList.remove('login');
+    const avatar = JotaAvatar.html(JotaAvatar.deUsuario(currentUser.uid), currentUser.displayName || (currentUser.email || 'Cliente').split('@')[0], 'jav-nav');
+    const name = currentUser.displayName || (currentUser.email || 'Cliente').split('@')[0];
+    btn.innerHTML = `${avatar} <span class="name">${esc(name)}</span>`;
+    menuEmail.textContent = currentUser.email;
+  } else {
+    btn.classList.add('login');
+    btn.innerHTML = 'Ingresar';
+    menu.classList.remove('open');
+  }
+}
+
+window.handleAuthClick = function() {
+  if (currentUser) document.getElementById('userMenu').classList.toggle('open');
+  else signInWithGoogle();
+};
+
+window.signInWithGoogle = async function() {
+  try { await signInWithPopup(auth, googleProvider); } catch (e) {}
+};
+
+window.signOutUser = async function() {
+  await signOut(auth);
+  document.getElementById('userMenu').classList.remove('open');
+};
+
+document.addEventListener('click', (e) => {
+  const wrapper = document.querySelector('.auth-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) document.getElementById('userMenu').classList.remove('open');
+});
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+
+<script>
+const SECTIONS = [
+];
+
+function slugify(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+}
+function escapeAttr(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function stripHtml(s) { const t = document.createElement('div'); t.innerHTML = s; return t.textContent || ''; }
+function normalize(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+
+function renderChips() {
+  document.getElementById('catsTrack').innerHTML = SECTIONS.map((s, i) => `
+    <a class="cat-chip${i === 0 ? ' active' : ''}" href="#${s.id}" data-cat="${s.id}" style="--sec:${s.color}">
+      <span class="cat-full">${s.title}</span><span class="cat-short">${s.short}</span>
+      <b class="cat-count">${s.items.length}</b>
+    </a>
+  `).join('');
+}
+
+function renderBody() {
+  document.getElementById('faqBody').innerHTML = SECTIONS.map(s => `
+    <section class="faq-sec" id="${s.id}" style="--sec:${s.color}">
+      <div class="sec-head">
+        <span class="sec-num">${s.num}</span>
+        <h2 class="sec-title"><span class="t-full">${s.title}</span><span class="t-short">${s.short}</span></h2>
+        <span class="sec-line" aria-hidden="true"></span>
+      </div>
+      <div class="faq-list">
+        ${s.items.map((it, idx) => {
+          const slug = slugify(it.q);
+          return `
+            <div class="faq-item" data-q="${escapeAttr(it.q)}" data-a="${escapeAttr(stripHtml(it.a))}" id="${s.id}-${idx}-${slug}">
+              <button class="faq-q" type="button" aria-expanded="false" onclick="toggleItem(this)">
+                <span class="faq-q-text">${it.q}</span>
+                <span class="faq-q-ic" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="faq-a">${it.a}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </section>
+  `).join('');
+}
+
+window.toggleItem = function(el) {
+  const item = el.closest('.faq-item');
+  if (!item) return;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => {
+    if (i !== item) { i.classList.remove('open'); i.querySelector('.faq-q')?.setAttribute('aria-expanded', 'false'); }
+  });
+  item.classList.toggle('open', !wasOpen);
+  item.querySelector('.faq-q')?.setAttribute('aria-expanded', String(!wasOpen));
+  if (!wasOpen && item.id) history.replaceState(null, '', '#' + item.id);
+};
+
+const searchInput = document.getElementById('faqSearch');
+const searchClear = document.getElementById('searchClear');
+let searchTimeout;
+searchInput.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(runSearch, 100); });
+
+function runSearch() {
+  const raw = searchInput.value.trim();
+  searchClear.classList.toggle('show', raw.length > 0);
+  const q = normalize(raw);
+  const items = document.querySelectorAll('.faq-item');
+  let visibleCount = 0;
+  const sectionVisible = {};
+
+  items.forEach(item => {
+    const match = !q || normalize(item.dataset.q || '').includes(q) || normalize(item.dataset.a || '').includes(q);
+    item.classList.toggle('hidden', !match);
+    if (match) {
+      visibleCount++;
+      const section = item.closest('.faq-sec');
+      if (section) sectionVisible[section.id] = true;
+      if (q) { highlight(item, raw); item.classList.add('open'); item.querySelector('.faq-q')?.setAttribute('aria-expanded', 'true'); }
+      else { unhighlight(item); item.classList.remove('open'); item.querySelector('.faq-q')?.setAttribute('aria-expanded', 'false'); }
+    } else { unhighlight(item); }
+  });
+
+  document.querySelectorAll('.faq-sec').forEach(section => {
+    section.style.display = (!q || sectionVisible[section.id]) ? '' : 'none';
+  });
+  document.getElementById('noResults').classList.toggle('show', q && visibleCount === 0);
+}
+
+window.clearSearch = function() { searchInput.value = ''; runSearch(); searchInput.focus(); };
+
+function highlight(item, term) {
+  const re = new RegExp('(' + escapeRegex(term) + ')', 'gi');
+  const qEl = item.querySelector('.faq-q-text');
+  const aEl = item.querySelector('.faq-a');
+  if (qEl && !qEl.dataset.original) qEl.dataset.original = qEl.innerHTML;
+  if (aEl && !aEl.dataset.original) aEl.dataset.original = aEl.innerHTML;
+  if (qEl) qEl.innerHTML = wrapMarks(qEl.dataset.original, re);
+  if (aEl) aEl.innerHTML = wrapMarks(aEl.dataset.original, re);
+}
+function unhighlight(item) {
+  const qEl = item.querySelector('.faq-q-text');
+  const aEl = item.querySelector('.faq-a');
+  if (qEl && qEl.dataset.original) { qEl.innerHTML = qEl.dataset.original; delete qEl.dataset.original; }
+  if (aEl && aEl.dataset.original) { aEl.innerHTML = aEl.dataset.original; delete aEl.dataset.original; }
+}
+function wrapMarks(html, re) {
+  return html.split(/(<[^>]+>)/).map(p => p.startsWith('<') ? p : p.replace(re, '<mark>$1</mark>')).join('');
+}
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function renderEmptyState() {
+  document.querySelector('.faq-cats')?.classList.add('is-hidden');
+  document.querySelector('.faq-search-row')?.classList.add('is-hidden');
+  document.querySelector('.faq-hero-sub')?.classList.add('is-hidden');
+  document.getElementById('faqBody').innerHTML = '';
+}
+
+if (SECTIONS.length) {
+  renderChips();
+  renderBody();
+} else {
+  renderEmptyState();
+}
+
+const chips = () => document.querySelectorAll('.cat-chip');
+const secs = () => document.querySelectorAll('.faq-sec');
+
+function updateActiveChip() {
+  const offset = 130 + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--alto-header')) || 0);
+  let active = null;
+  secs().forEach(s => {
+    if (s.style.display === 'none') return;
+    const rect = s.getBoundingClientRect();
+    if (rect.top <= offset && rect.bottom > offset) active = s.id;
+  });
+  if (!active) { const first = [...secs()].find(s => s.style.display !== 'none'); if (first) active = first.id; }
+  chips().forEach(c => {
+    const on = c.dataset.cat === active;
+    c.classList.toggle('active', on);
+    if (on) {
+      const track = c.parentElement;
+      if (track && track.scrollWidth > track.clientWidth) {
+        const min = c.offsetLeft - track.clientWidth + c.offsetWidth + 16;
+        const max = c.offsetLeft - 16;
+        if (track.scrollLeft < min) track.scrollLeft = min;
+        else if (track.scrollLeft > max) track.scrollLeft = max;
+      }
+    }
+  });
+}
+
+document.querySelectorAll('.cat-chip').forEach(chip => {
+  chip.addEventListener('click', (e) => {
+    const target = document.getElementById(chip.dataset.cat);
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#' + chip.dataset.cat); }
+  });
+});
+
+if (location.hash) {
+  const target = document.querySelector(location.hash);
+  if (target) setTimeout(() => {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (target.classList.contains('faq-item')) { target.classList.add('open'); target.querySelector('.faq-q')?.setAttribute('aria-expanded', 'true'); }
+  }, 120);
+}
+
+window.addEventListener('scroll', updateActiveChip, { passive: true });
+updateActiveChip();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battle Pass · Jota Store</title>
+<meta name="description" content="El pase de Jota Store. Cada compra suma JP, cada nivel te devuelve algo. Un camino de recompensas que se desbloquea solo.">
+<meta name="theme-color" content="#0A121C">
+
+<link rel="icon" type="image/webp" href="assets/img/shared/jota_lobo_128.webp">
+<link rel="apple-touch-icon" href="assets/img/shared/jota_lobo_128.webp">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jota Store">
+<meta property="og:title" content="Battle Pass · Jota Store">
+<meta property="og:description" content="Cada compra suma JP. Cada nivel te devuelve algo. Acá tu plata vale el doble.">
+<meta property="og:image" content="https://jotaweb.pages.dev/assets/img/shared/jota_logo.webp">
+<meta property="og:url" content="https://jotaweb.pages.dev/battle-pass.html">
+<meta property="og:locale" content="es_AR">
+
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://apis.google.com" crossorigin>
+<link rel="preconnect" href="https://jota-store.firebaseapp.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet"></noscript>
+<style>
+  :root {
+    --bg: #0A121C;
+    --bg-deep: #050810;
+    --panel: #101E2C;
+    --panel-hover: #16283A;
+    --step-bg: #0D1826;
+    --card: #0C1420;
+    --border: rgba(255,255,255,0.08);
+    --celeste: #2FB6E8;
+    --celeste-light: #6FE0FF;
+    --celeste-glow: rgba(47,182,232,0.35);
+    --gold: #E8B93C;
+    --gold-light: #FFD97A;
+    --gold-glow: rgba(232,185,60,0.35);
+    --magenta: #FF2FD6;
+    --magenta-glow: rgba(255,47,214,0.4);
+    --text: #F2F7FA;
+    --muted: #A9BCC9;
+    --dim: #5c7080;
+    --font-display: 'Russo One', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --cut: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:var(--alto-header,0px)}
+  body{font-family:var(--font-body);background:radial-gradient(1100px 650px at 100% 0%,rgba(47,182,232,0.07),transparent 70%),radial-gradient(900px 600px at 0% 100%,rgba(232,185,60,0.045),transparent 70%),linear-gradient(180deg,#0A121C 0%,#08101A 100%);background-color:var(--bg);color:var(--text);font-size:16px;line-height:1.5;min-height:100vh;overflow-x:clip;-webkit-font-smoothing:antialiased}
+  a{color:var(--celeste);text-decoration:none}
+  ::selection{background:var(--magenta);color:var(--bg-deep)}
+
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;opacity:0.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  @keyframes flotar{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 14px))}}
+  @keyframes latir{0%,100%{opacity:.18}50%{opacity:.5}}
+  @keyframes brilloTitulo{0%,100%{filter:drop-shadow(0 0 10px rgba(232,185,60,0.22))}50%{filter:drop-shadow(0 0 26px rgba(232,185,60,0.5))}}
+  @keyframes pulsoMagenta{
+    0%,100%{box-shadow:0 0 0 1px rgba(255,47,214,.45),0 0 22px rgba(255,47,214,.18)}
+    50%{box-shadow:0 0 0 1px rgba(255,47,214,.85),0 0 40px rgba(255,47,214,.4)}
+  }
+
+
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 40px;background:rgba(10,18,28,0.88);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .logo-lockup{display:flex;align-items:center}
+  .logo-lockup img{height:60px;width:auto;filter:drop-shadow(0 0 18px rgba(47,182,232,0.5))}
+  .logo-texto{font-family:var(--font-display);font-size:26px;line-height:1;letter-spacing:.02em;color:#fff;margin-left:10px;white-space:nowrap;text-shadow:0 0 18px rgba(47,182,232,0.35)}
+  .logo-texto b{font-weight:400;background:linear-gradient(90deg,#6FE0FF 0%,#BDEBF5 45%,#FFD97A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+  .logo-texto.compacta{display:inline-flex;flex-direction:column;font-size:13px;line-height:1.08;margin-left:7px}
+  .logo-texto.oculta{display:none}
+  .nav-desktop{display:flex;align-items:center;gap:10px}
+  .nav-btn{font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--panel);padding:10px 22px;clip-path:var(--cut);border:1px solid var(--border);transition:background .2s,color .2s;cursor:pointer}
+  .nav-btn:hover{background:var(--panel-hover);color:var(--celeste-light)}
+  .nav-btn.active{font-weight:700;color:#fff;background:var(--magenta);border-color:transparent;box-shadow:0 0 18px var(--magenta-glow)}
+  .nav-btn.active:hover{color:#fff}
+
+  .header-right{display:flex;align-items:center;gap:12px}
+  .auth-wrapper{position:relative}
+  .auth-btn{font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--panel);border:1px solid var(--border);padding:11px 26px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 100%,12px 100%);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:filter .2s;font-family:inherit}
+  .auth-btn.login{color:#fff;background:linear-gradient(90deg,var(--celeste),var(--magenta));border-color:transparent;box-shadow:0 0 22px var(--celeste-glow)}
+  .auth-btn:hover{filter:brightness(1.12)}
+  .auth-btn img{width:22px;height:22px;border-radius:50%}
+  .auth-btn .name{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:none;letter-spacing:0}
+  .user-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--panel);border:1px solid rgba(47,182,232,0.35);padding:6px;min-width:220px;display:none;box-shadow:0 10px 40px rgba(0,0,0,0.6);z-index:80}
+  .user-menu.open{display:block}
+  .user-menu-email{font-size:13px;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);margin-bottom:4px;word-break:break-all}
+  .user-menu-item{padding:10px 14px;cursor:pointer;font-size:15px;font-weight:600;transition:background .2s;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+  .user-menu-item:hover{background:var(--panel-hover);color:var(--celeste-light)}
+
+  .ham-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 10px;cursor:pointer;align-items:center;justify-content:center;display:none}
+  .mobile-nav{display:none;flex-basis:100%;flex-direction:column;border-top:1px solid var(--border);margin-top:10px}
+  .mobile-nav.open{display:flex}
+  .mobile-nav-link{height:48px;padding:0 4px;display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);transition:background .2s,color .2s}
+  .mobile-nav-link:last-child{border-bottom:none}
+  .mobile-nav-link:hover,.mobile-nav-link:active{background:rgba(255,47,214,0.08);color:var(--text)}
+
+  .bp-hero{position:relative;z-index:5;overflow:hidden;background:radial-gradient(130% 120% at 50% 0%,#241D0C 0%,#0C1422 48%,#050810 100%);padding:56px 40px 52px;border-bottom:1px solid var(--border);text-align:center}
+  .bp-hero-diag{position:absolute;top:-10%;left:52%;width:3px;height:120%;transform:rotate(15.5deg);background:linear-gradient(180deg,transparent,var(--celeste) 30%,var(--gold) 60%,transparent);box-shadow:0 0 24px var(--gold-glow);z-index:2;pointer-events:none}
+  .bp-shard{position:absolute;z-index:2;pointer-events:none;animation:latir 3.5s ease-in-out infinite}
+  .bp-shard.tl{top:0;left:0;width:110px;height:110px;background:var(--gold);clip-path:polygon(0 0,100% 0,0 100%);opacity:.45}
+  .bp-shard.br{bottom:0;right:0;width:140px;height:140px;background:var(--celeste);clip-path:polygon(100% 100%,100% 0,0 100%);opacity:.35;animation-delay:1.75s}
+  .bp-hero-lobo{position:absolute;top:50%;right:2%;transform:translateY(-50%);width:340px;height:auto;opacity:.08;z-index:1;pointer-events:none;animation:flotar 6s ease-in-out infinite}
+  .bp-hero-inner{position:relative;z-index:3;max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px}
+  .bp-title{font-family:var(--font-display);font-weight:400;font-size:60px;line-height:1.02;text-transform:uppercase;letter-spacing:.01em;background:linear-gradient(180deg,var(--gold-light),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;animation:brilloTitulo 4s ease-in-out infinite}
+  .bp-sub{font-weight:500;font-size:19px;color:var(--muted);max-width:640px;text-wrap:pretty}
+
+  .bp-prog{width:100%;max-width:760px;margin-top:14px;background:rgba(16,30,44,0.72);border:1px solid rgba(232,185,60,0.28);padding:20px 24px 18px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%)}
+  .bp-prog-row{display:flex;align-items:center;gap:20px}
+  .bp-prog-cell{display:flex;flex-direction:column;align-items:center;min-width:74px}
+  .bp-prog-l{font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+  .bp-prog-n{font-family:var(--font-display);font-size:42px;line-height:1;color:var(--gold);text-shadow:0 0 22px var(--gold-glow)}
+  .bp-prog-n.gris{color:var(--dim);text-shadow:none}
+  .bp-bar{flex:1;height:14px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.09);position:relative;overflow:hidden}
+  .bp-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-light));box-shadow:0 0 18px rgba(232,185,60,0.55);transition:width .35s ease}
+  .bp-prog-txt{margin-top:12px;font-weight:600;font-size:15px;color:var(--text)}
+  .bp-prog-temp{margin-top:6px;font-weight:500;font-size:13px;color:var(--dim)}
+  .bp-prog-temp b{color:var(--muted)}
+
+  .bp-aviso{width:100%;max-width:640px;background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);padding:18px 22px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+  .bp-aviso p{font-weight:500;font-size:15.5px;color:var(--muted)}
+  .bp-aviso b{color:var(--gold);font-weight:700}
+
+  section.band{position:relative;z-index:5;padding:54px 40px;border-bottom:1px solid var(--border)}
+  section.band.deep{background:var(--bg-deep)}
+  .band-inner{max-width:1180px;margin:0 auto}
+  .band-title{font-family:var(--font-display);font-weight:400;font-size:26px;text-transform:uppercase;color:var(--text);text-align:center}
+
+  .pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:26px}
+  .paso{background:var(--step-bg);border:1px solid var(--border);border-top:3px solid var(--gold);padding:26px 22px 24px;text-align:center;clip-path:var(--cut);display:flex;flex-direction:column;gap:8px}
+  .paso-n{font-family:var(--font-display);font-size:46px;line-height:1;color:var(--gold);text-shadow:0 0 26px var(--gold-glow)}
+  .paso h3{font-family:var(--font-display);font-weight:400;font-size:16px;text-transform:uppercase;color:var(--text)}
+  .paso p{font-weight:500;font-size:15px;color:var(--muted);text-wrap:pretty}
+  .pasos-foot{margin-top:14px;text-align:center;font-weight:500;font-size:14px;color:var(--dim)}
+
+  .camino{display:grid;column-gap:26px;row-gap:48px;padding:0 32px;margin-top:34px}
+  .camino.una{padding:0;row-gap:26px}
+  .nodo{position:relative}
+
+  .nodo-linea{position:absolute;top:30px;width:26px;height:2px;background:rgba(255,255,255,0.10)}
+  .nodo-linea.der{right:-26px}
+  .nodo-linea.izq{left:-26px}
+  .nodo-linea.on{background:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+
+  .nodo-curva{position:absolute;top:30px;width:26px;height:calc(100% + 18px);border:2px solid rgba(255,255,255,0.10)}
+  .nodo-curva.der{right:-26px;border-left:0;border-radius:0 12px 12px 0}
+  .nodo-curva.izq{left:-26px;border-right:0;border-radius:12px 0 0 12px}
+  .nodo-curva.on{border-color:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+  .nodo-curva.vert{top:100%;left:26px;width:2px;height:26px;border:0;border-radius:0;background:rgba(255,255,255,0.10)}
+  .nodo-curva.vert.on{background:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+
+  .tarj{width:100%;height:100%;display:flex;flex-direction:column;gap:8px;padding:13px 14px 12px;background:var(--card);border:1px solid var(--border);border-top:3px solid rgba(232,185,60,0.35);clip-path:var(--cut)}
+  .tarj-head{display:flex;align-items:center;gap:10px}
+  .tarj-ic{flex-shrink:0;display:block;color:var(--dim)}
+  .tarj-num{flex-shrink:0;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:12px;background:var(--bg);border:1px solid rgba(232,185,60,0.7);color:var(--gold);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+  .tarj-jp{margin-left:auto;font-weight:700;font-size:12px;letter-spacing:.1em;white-space:nowrap;color:var(--dim)}
+  .tarj-nom{flex:1;font-weight:600;font-size:17px;line-height:1.22;text-wrap:pretty;color:var(--muted)}
+  .tarj-tk{font-weight:700;font-size:12px;letter-spacing:.05em;color:var(--gold)}
+  .tarj-pie{display:flex;align-items:center;min-height:32px}
+  .tarj-est{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .tarj-est.gris{color:var(--dim)}
+
+  .tarj.reclamar{background:#141A2A;border-top-color:var(--magenta);animation:pulsoMagenta 2.6s ease-in-out infinite}
+  .tarj.reclamar .tarj-nom{color:var(--text)}
+  .tarj.reclamar .tarj-jp,.tarj.reclamar .tarj-ic{color:var(--magenta)}
+  .tarj.reclamar .tarj-num{border-color:var(--magenta);color:var(--magenta)}
+
+  .tarj.elegir{background:var(--panel);border-top-color:var(--celeste);box-shadow:0 0 0 1px rgba(47,182,232,.3),0 0 22px rgba(47,182,232,.14)}
+  .tarj.elegir .tarj-nom{color:var(--text)}
+  .tarj.elegir .tarj-jp,.tarj.elegir .tarj-ic{color:var(--celeste)}
+  .tarj.elegir .tarj-num{border-color:var(--celeste);color:var(--celeste-light)}
+
+  .tarj.bloqueado{background:var(--bg);border-top-color:rgba(255,255,255,0.10);opacity:.45}
+  .camino.previa .tarj.bloqueado{opacity:.66}
+  .tarj.bloqueado .tarj-num{border-color:rgba(255,255,255,0.14);color:var(--dim)}
+  .tarj.final{border-top-width:3px}
+  .tarj.final .tarj-nom{font-size:19px}
+  .tarj.final.bloqueado{border-top-color:rgba(232,185,60,0.55);opacity:.62}
+
+  .bp-btn{display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);border:none;padding:11px 20px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%);transition:filter .15s}
+  .bp-btn:hover{filter:brightness(1.12)}
+  .bp-btn.magenta{background:var(--magenta)}
+  .bp-btn.celeste{background:var(--celeste)}
+
+  .modal{position:fixed;inset:0;z-index:200;background:rgba(3,6,12,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .modal-box{width:100%;max-width:780px;max-height:90vh;overflow-y:auto;background:var(--panel);border:1px solid rgba(47,182,232,0.4);border-top:3px solid var(--celeste);box-shadow:0 30px 80px rgba(0,0,0,0.7);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);padding:26px}
+  .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .modal-head h3{font-family:var(--font-display);font-weight:400;font-size:22px;text-transform:uppercase;color:var(--text)}
+  .modal-x{background:none;border:1px solid rgba(255,255,255,0.14);color:var(--muted);width:32px;height:32px;flex-shrink:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .modal-x:hover{color:var(--text);border-color:rgba(255,255,255,0.3)}
+  .modal-ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
+  .op{text-align:left;display:flex;flex-direction:column;gap:10px;padding:18px 16px;cursor:pointer;background:var(--step-bg);border:1px solid var(--border);clip-path:var(--cut);font-family:inherit}
+  .op:hover{background:var(--panel-hover)}
+  .op-ic{display:block;color:var(--muted)}
+  .op-nom{font-family:var(--font-display);font-size:15px;line-height:1.25;text-transform:uppercase;color:var(--text)}
+  .op.on{background:var(--panel-hover);border-color:var(--celeste);box-shadow:0 0 0 1px rgba(47,182,232,0.45)}
+  .op.on .op-ic{color:var(--celeste-light)}
+  .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:22px;flex-wrap:wrap}
+  .modal-foot span{font-weight:500;font-size:14px;color:var(--dim)}
+  .btn-conf{font-family:inherit;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--celeste);border:none;padding:12px 26px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%)}
+  .btn-conf[disabled]{background:#3a4450;cursor:not-allowed;opacity:.6}
+
+  .modal-box.hh{position:relative;overflow:hidden;max-width:520px;text-align:center;
+    border-top-color:var(--gold);border-color:rgba(232,185,60,0.45);
+    background:radial-gradient(120% 120% at 50% 0%,#2A2109 0%,#101E2C 60%)}
+  .hh-rayo{position:absolute;top:-20%;right:9%;width:3px;height:140%;transform:rotate(18deg);
+    background:linear-gradient(180deg,transparent,var(--gold-light) 40%,transparent);
+    box-shadow:0 0 30px var(--gold-glow);pointer-events:none;z-index:0}
+  .modal-box.hh > *:not(.hh-rayo){position:relative;z-index:1}
+  .modal-box.hh h3{font-family:var(--font-display);font-weight:400;font-size:24px;
+    text-transform:uppercase;color:var(--gold-light);position:relative}
+  .hh-grande{position:relative;margin:10px 0 2px}
+  .hh-grande b{font-family:var(--font-display);font-size:64px;line-height:1;color:var(--gold);
+    text-shadow:0 0 30px var(--gold-glow)}
+  .hh-txt{position:relative;margin:14px auto 0;max-width:40ch;font-weight:500;font-size:16px;color:var(--muted)}
+  .hh-txt b{color:var(--text)}
+  .hh-fin{position:relative;margin-top:14px;font-weight:600;font-size:14px;color:var(--dim)}
+  .hh-fin b{color:var(--gold)}
+  .hh-pie{position:relative;display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  .hh-cerrar{font-family:inherit;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);background:none;border:1px solid rgba(255,255,255,0.16);padding:11px 20px;cursor:pointer}
+  .hh-cerrar:hover{color:var(--text);border-color:rgba(255,255,255,0.32)}
+  .bp-btn.celeste[href]{text-decoration:none}
+
+  .hh-activo{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+    margin-top:18px;padding:12px 18px;background:rgba(232,185,60,0.10);
+    border:1px solid rgba(232,185,60,0.4);clip-path:var(--cut);
+    font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-light)}
+  .hh-activo span{color:var(--muted);font-weight:600;letter-spacing:0;text-transform:none}
+
+  footer{position:relative;z-index:5;padding:56px 40px 40px;background:var(--bg-deep);overflow:hidden}
+  .footer-lobo{position:absolute;top:50%;right:-90px;transform:translateY(-50%);width:360px;height:auto;opacity:.07;pointer-events:none}
+  .footer-grid{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;max-width:1080px;margin:0 auto}
+  .footer-brand{max-width:320px}
+  .footer-brand img{height:70px;width:auto;filter:drop-shadow(0 0 16px rgba(47,182,232,0.4))}
+  .footer-brand p{margin:14px 0 0;font-weight:500;font-size:16px;color:var(--muted)}
+  .footer-col-title{display:block;font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--celeste);margin-bottom:14px}
+  .footer-link{display:block;font-weight:500;font-size:16px;color:var(--muted);margin-bottom:9px;transition:color .2s}
+  .footer-link:hover{color:var(--celeste-light)}
+  .footer-link.cur{color:var(--magenta)}
+  .footer-socials{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  .footer-social-btn{display:inline-flex;font-weight:700;font-size:13px;color:var(--bg-deep);background:var(--celeste);padding:11px 18px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%);transition:filter .2s}
+  .footer-social-btn:hover{filter:brightness(1.1);color:var(--bg-deep)}
+  .footer-bottom{position:relative;z-index:2;margin-top:40px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-weight:500;font-size:13px;letter-spacing:.05em;color:#5c6d78}
+
+  .toast{position:fixed;bottom:26px;right:26px;z-index:99;font-weight:700;font-size:14px;color:var(--text);background:var(--panel);border:1px solid rgba(255,47,214,0.6);padding:13px 20px;clip-path:var(--cut);box-shadow:0 0 24px var(--magenta-glow);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .25s,transform .25s;max-width:86vw}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  .hidden{display:none !important}
+  :focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-track{background:var(--bg-deep);border-left:1px solid var(--border)}
+  ::-webkit-scrollbar-thumb{background:var(--magenta)}
+
+  @media (max-width:1440px){
+    .nav-desktop{gap:7px}
+    .nav-btn{padding:10px 14px;font-size:14px;letter-spacing:.05em}
+  }
+
+  @media (max-width:1200px){
+    .nav-desktop{display:none}
+    .ham-btn{display:flex}
+    header{padding:10px 20px}
+    .bp-hero{padding:44px 24px 46px}
+    .bp-title{font-size:46px}
+    section.band{padding:44px 24px}
+  }
+
+  @media (max-width:900px){
+    header{padding:8px 14px}
+    .logo-lockup img{height:44px}
+    .auth-btn{font-size:13px;padding:11px 20px}
+
+    .bp-hero{padding:30px 18px 36px}
+    .bp-title{font-size:34px}
+    .bp-sub{font-size:16px}
+    .bp-hero-lobo{width:210px;opacity:.07;right:-6%}
+    .bp-shard.tl{width:70px;height:70px}
+    .bp-shard.br{width:90px;height:90px}
+    .bp-prog{padding:16px 16px 14px}
+    .bp-prog-row{gap:12px}
+    .bp-prog-cell{min-width:56px}
+    .bp-prog-n{font-size:32px}
+    .bp-prog-txt{font-size:14px}
+
+    section.band{padding:34px 18px}
+    .band-title{font-size:22px}
+    .pasos{grid-template-columns:1fr;gap:12px}
+    .camino{margin-top:26px}
+
+    footer{padding:36px 18px 28px}
+    .footer-lobo{display:none}
+    .footer-grid{flex-direction:column}
+    .footer-brand img{height:52px}
+    .footer-socials{flex-direction:row;flex-wrap:wrap}
+    body::after{display:none}
+  }
+
+  @media (max-width:420px){
+    .bp-title{font-size:28px}
+    .bp-prog-n{font-size:28px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important}
+  }
+  @media (max-width:600px){
+    header{padding:8px 12px}
+    .logo-lockup img{height:42px}
+    .logo-texto{font-size:21px;margin-left:8px}
+    .logo-texto.compacta{font-size:11px}
+    .ham-btn{width:42px;height:40px;padding:0}
+    .auth-btn{height:40px;padding:0 16px;font-size:13px}
+    .auth-btn .name{display:none}
+  }
+</style>
+<link rel="stylesheet" href="assets/js/avatares.css">
+<script src="assets/js/avatares.js"></script>
+<script src="assets/js/battlepass.js"></script>
+</head>
+<body>
+
+<header>
+  <a class="logo-lockup" href="index.html">
+    <img src="assets/img/shared/jota_logo_320.webp" alt="" width="157" height="137">
+    <span class="logo-texto">JOTA<b>STORE</b></span>
+  </a>
+  <nav class="nav-desktop">
+    <a class="nav-btn" href="index.html">Inicio</a>
+    <a class="nav-btn" href="comprar.html">Comprar</a>
+    <a class="nav-btn" href="vender.html">Vender</a>
+    <a class="nav-btn active" href="battle-pass.html">Battle Pass</a>
+    <a class="nav-btn" href="sorteos.html">Sorteos Jota</a>
+    <a class="nav-btn" href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-right">
+    <button class="ham-btn" id="hamBtn" type="button" onclick="toggleMobileMenu()" aria-label="Menú" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="auth-wrapper">
+      <button class="auth-btn login" id="authBtn" onclick="handleAuthClick()">Ingresar</button>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-email" id="userMenuEmail"></div>
+        <a class="user-menu-item" href="mi-cuenta.html">Mi cuenta</a>
+        <div class="user-menu-item" role="button" tabindex="0" onclick="signOutUser()">Cerrar sesión</div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a class="mobile-nav-link" href="index.html">Inicio</a>
+    <a class="mobile-nav-link" href="comprar.html">Comprar</a>
+    <a class="mobile-nav-link" href="vender.html">Vender</a>
+    <a class="mobile-nav-link" href="battle-pass.html">Battle Pass</a>
+    <a class="mobile-nav-link" href="sorteos.html">Sorteos Jota</a>
+    <a class="mobile-nav-link" href="faq.html">FAQ</a>
+  </div>
+</header>
+<script src="assets/js/marca.js"></script>
+
+<section class="bp-hero">
+  <div class="bp-hero-diag" aria-hidden="true"></div>
+  <div class="bp-shard tl" aria-hidden="true"></div>
+  <div class="bp-shard br" aria-hidden="true"></div>
+  <img class="bp-hero-lobo" src="assets/img/shared/jota_lobo.webp" alt="" width="748" height="569">
+  <div class="bp-hero-inner">
+    <h1 class="bp-title">Jota Battle Pass</h1>
+    <p class="bp-sub">Cada compra suma JP. Cada nivel te devuelve algo. Acá tu plata vale el doble.</p>
+
+    <div class="bp-prog hidden" id="zonaProg">
+      <div class="bp-prog-row">
+        <div class="bp-prog-cell">
+          <span class="bp-prog-l">Nivel</span>
+          <span class="bp-prog-n" id="progNivel">1</span>
+        </div>
+        <div class="bp-bar" id="progBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="bp-bar-fill" id="progFill"></div>
+        </div>
+        <div class="bp-prog-cell">
+          <span class="bp-prog-l">Meta</span>
+          <span class="bp-prog-n gris" id="progMeta">20</span>
+        </div>
+      </div>
+      <p class="bp-prog-txt" id="progTxt">—</p>
+      <p class="bp-prog-temp" id="progTemp"></p>
+    </div>
+
+    <div id="zonaAviso"></div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="band-inner">
+    <h2 class="band-title">Cómo funciona</h2>
+    <div class="pasos">
+      <div class="paso">
+        <span class="paso-n">1</span>
+        <h3>Comprá</h3>
+        <p>Cada compra que hacés en Jota Store te suma JP automáticamente.</p>
+      </div>
+      <div class="paso">
+        <span class="paso-n">2</span>
+        <h3>Subí de nivel</h3>
+        <p>Los JP se acumulan. Al llegar al JP de cada nivel, lo desbloqueás.</p>
+      </div>
+      <div class="paso">
+        <span class="paso-n">3</span>
+        <h3>Reclamá</h3>
+        <p>Entrás acá y reclamás la recompensa del nivel. Queda guardada en tu cuenta.</p>
+      </div>
+    </div>
+    <p class="pasos-foot">Los JP no se gastan al reclamar: solo suman durante la temporada.</p>
+  </div>
+</section>
+
+<section class="band deep">
+  <div class="band-inner">
+    <h2 class="band-title">El camino</h2>
+    <div id="zonaHappy"></div>
+    <div class="camino" id="camino"></div>
+  </div>
+</section>
+
+<footer>
+  <img class="footer-lobo" src="assets/img/shared/jota_lobo.webp" alt="" width="748" height="569" loading="lazy">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/img/shared/jota_logo_320.webp" alt="Jota Store" width="183" height="160" loading="lazy">
+      <p>Compra y venta de skins de CS2 al mejor precio. Argentina, entrega al toque.</p>
+    </div>
+    <div>
+      <span class="footer-col-title">Tienda</span>
+      <a class="footer-link" href="comprar.html">Comprar skins</a>
+      <a class="footer-link" href="vender.html">Vender skins</a>
+      <a class="footer-link cur" href="battle-pass.html">Battle Pass</a>
+      <a class="footer-link" href="sorteos.html">Sorteos Jota</a>
+    </div>
+    <div>
+      <span class="footer-col-title">Ayuda</span>
+      <a class="footer-link" href="faq.html">FAQ</a>
+      <a class="footer-link" href="faq.html#pagos">Medios de pago</a>
+      <a class="footer-link" href="faq.html#jota">Términos</a>
+    </div>
+    <div>
+      <span class="footer-col-title">Seguinos</span>
+      <div class="footer-socials">
+        <a class="footer-social-btn" href="https://www.instagram.com/jotastorecsgo/" target="_blank" rel="noopener">◈ Instagram</a>
+        <a class="footer-social-btn" href="https://www.facebook.com/JotaStoreCsgo" target="_blank" rel="noopener">◈ Facebook</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 JOTA STORE · @JOTASTORECSGO · No afiliado a Valve Corporation</div>
+</footer>
+
+<div class="modal" id="modalEleccion" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitulo">Elegí tu recompensa</h3>
+      <button class="modal-x" type="button" onclick="cerrarEleccion()" aria-label="Cerrar"></button>
+    </div>
+    <div class="modal-ops" id="modalOps"></div>
+    <div class="modal-foot">
+      <span>La elección es definitiva.</span>
+      <button class="btn-conf" type="button" id="btnConfirmar" disabled>Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalHappy" role="dialog" aria-modal="true" aria-labelledby="hhTitulo">
+  <div class="modal-box hh">
+    <div class="hh-rayo" aria-hidden="true"></div>
+    <h3 id="hhTitulo">¡Happy Hour activado!</h3>
+    <p class="hh-grande"><b id="hhMult">1,5×</b> JP</p>
+    <p class="hh-txt">Durante las próximas <b id="hhHoras">24 horas</b>, todo lo que compres
+      suma <b>un 50% más de JP</b>. Se aplica solo, sobre las compras que hagas en ese rato.</p>
+    <p class="hh-fin">Termina el <b id="hhFin">—</b></p>
+    <p class="hh-fin" id="hhTickets"></p>
+    <div class="hh-pie">
+      <a class="bp-btn celeste" href="comprar.html">Ir a comprar</a>
+      <button class="hh-cerrar" type="button" onclick="cerrarHappyHour()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toggleMobileMenu(){var n=document.getElementById('mobileNav'),b=document.getElementById('hamBtn'),o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o));}
+document.addEventListener('click',function(e){var n=document.getElementById('mobileNav'),b=document.getElementById('hamBtn');if(!n||!b)return;if(!n.contains(e.target)&&!b.contains(e.target)){n.classList.remove('open');b.setAttribute('aria-expanded','false');}});
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  const params = new URLSearchParams(location.search);
+  const DEMO = params.has('demo') || params.has('jp');
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  let ESTADO = { jp: 0, gasto: 0, jpExtra: 0, ordenes: [],
+                 reclamados: [], elegidos: {}, cuando: {}, hhHasta: null, temporada: null };
+  let activo = false;
+  let fallo = false;
+
+  function recalcularJp() {
+    if (DEMO) return;
+    ESTADO.jp = JotaPase.jpDeTemporada(ESTADO.ordenes, ESTADO, ESTADO.jpExtra);
+  }
+
+  function estadoDeEjemplo(jp) {
+    const alc = JotaPase.NIVELES.filter(l => jp >= l.jp).map(l => l.nivel);
+    const rec = alc.slice(0, Math.max(0, alc.length - 2));
+    const cuando = {};
+    for (const n of rec) cuando[n] = new Date().toISOString();
+    return { jp, reclamados: rec, elegidos: {}, cuando,
+             temporada: JotaPase.temporadaDe(new Date()) };
+  }
+
+  function pintarProgreso() {
+    if (!activo) {
+      $('zonaProg').classList.add('hidden');
+      $('zonaAviso').innerHTML = fallo
+        ? '<div class="bp-aviso"><p><b>No pudimos cargar tu pase.</b> Recargá la página en un rato. ' +
+          'Si sigue igual, escribinos y lo revisamos.</p></div>'
+        : '<div class="bp-aviso"><p><b>Entrá con tu cuenta</b> para ver tus JP y reclamar tus ' +
+          'recompensas. Cada compra que te entregamos te suma JP sola, no hay que hacer nada.</p></div>';
+      return;
+    }
+    $('zonaAviso').innerHTML = '';
+    $('zonaProg').classList.remove('hidden');
+
+    const p = JotaPase.progreso(ESTADO.jp);
+    $('progNivel').textContent = p.nivel;
+    $('progMeta').textContent = p.meta.nivel;
+    $('progFill').style.width = p.pct + '%';
+    $('progBar').setAttribute('aria-valuenow', String(Math.round(p.pct)));
+
+    const txt = p.siguiente
+      ? p.jp + ' / ' + p.meta.jp + ' JP · te faltan ' + p.faltan + ' JP para el nivel ' + p.siguiente.nivel
+      : 'Completaste el pase: ' + p.jp + ' JP';
+    $('progTxt').textContent = txt;
+    $('progBar').setAttribute('aria-label', txt);
+
+    const t = ESTADO.temporada;
+    $('progTemp').innerHTML = t
+      ? 'Temporada ' + t.numero + ' · se reinicia el <b>'
+        + JotaPase.aFecha(t.hasta).toLocaleDateString('es-AR', { day: '2-digit', month: 'long' })
+        + '</b>. Los marcos, banners y pines que ganes te los quedás para siempre.'
+      : '';
+
+    const hasta = JotaPase.aFecha(ESTADO.hhHasta);
+    const corriendo = hasta && hasta > new Date();
+    $('zonaHappy').innerHTML = corriendo
+      ? '<div class="hh-activo">' + JotaPase.svg('evento', 18, 2)
+        + String(JotaPase.ECONOMIA.hhMultiplicador).replace('.', ',') + '× JP activo'
+        + '<span>hasta el ' + hasta.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })
+        + ' a las ' + hasta.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })
+        + ' hs</span></div>'
+      : '';
+  }
+
+  function columnas(ancho) {
+    if (ancho >= 1240) return 5;
+    if (ancho >= 940) return 4;
+    if (ancho >= 700) return 3;
+    if (ancho >= 520) return 2;
+    return 1;
+  }
+
+  let colsPintadas = 0;
+
+  function pintarCamino() {
+    const cont = $('camino');
+    const cols = columnas(cont.clientWidth || window.innerWidth);
+    colsPintadas = cols;
+    cont.style.gridTemplateColumns = 'repeat(' + cols + ',minmax(0,1fr))';
+    cont.classList.toggle('una', cols === 1);
+    cont.classList.toggle('previa', !activo);
+
+    const niveles = JotaPase.NIVELES;
+    cont.innerHTML = niveles.map(function (l, i) {
+      const st = activo ? JotaPase.estado(l, ESTADO.jp, ESTADO.reclamados) : 'bloqueado';
+      const alcanzado = st !== 'bloqueado';
+      const ultimo = i === niveles.length - 1;
+
+      const fila = Math.floor(i / cols);
+      const enFila = i % cols;
+      const col = fila % 2 === 0 ? enFila + 1 : cols - enFila;
+      const finDeFila = enFila === cols - 1 || ultimo;
+      const hacia = fila % 2 === 0 ? 'der' : 'izq';
+      const on = alcanzado ? ' on' : '';
+
+      let conector = '';
+      if (cols > 1 && !finDeFila) {
+        conector += '<span class="nodo-linea ' + hacia + on + '" aria-hidden="true"></span>';
+      }
+      if (!ultimo && (cols === 1 || finDeFila)) {
+        conector += cols === 1
+          ? '<span class="nodo-curva vert' + on + '" aria-hidden="true"></span>'
+          : '<span class="nodo-curva ' + hacia + on + '" aria-hidden="true"></span>';
+      }
+
+      const nombre = JotaPase.nombreElegido(l.nivel, ESTADO.elegidos[l.nivel]) || l.nombre;
+      const falta = l.jp - ESTADO.jp;
+
+      let pie;
+      if (!activo) {
+        pie = '<span class="tarj-est gris">' + JotaPase.svg('candado', 14) + l.jp + ' JP</span>';
+      } else if (st === 'reclamado') {
+        pie = '<span class="tarj-est">' + JotaPase.svg('check', 15, 2.4) + 'Reclamado</span>';
+      } else if (st === 'reclamar') {
+        pie = '<button class="bp-btn magenta" type="button" data-reclamar="' + l.nivel + '" ' +
+              'aria-label="Reclamar la recompensa del nivel ' + l.nivel + '">' +
+              JotaPase.svg('bajar', 15, 2.2) + 'Reclamar</button>';
+      } else if (st === 'elegir') {
+        pie = '<button class="bp-btn celeste" type="button" data-elegir="' + l.nivel + '" ' +
+              'aria-label="Elegir la recompensa del nivel ' + l.nivel + '">' +
+              JotaPase.svg('eleccion', 15, 2.2) + 'Elegir recompensa</button>';
+      } else {
+        pie = '<span class="tarj-est gris">' + JotaPase.svg('candado', 14) +
+              (falta > 0 ? 'Te faltan ' + falta + ' JP' : 'Bloqueado') + '</span>';
+      }
+
+      return '' +
+        '<div class="nodo" style="grid-column:' + col + ';grid-row:' + (fila + 1) + '">' +
+          conector +
+          '<div class="tarj ' + st + (l.tipo === 'final' ? ' final' : '') + '">' +
+            '<div class="tarj-head">' +
+              '<span class="tarj-ic">' + JotaPase.svg(l.tipo, 24) + '</span>' +
+              '<span class="tarj-num">' + l.nivel + '</span>' +
+              '<span class="tarj-jp">' + l.jp + ' JP</span>' +
+            '</div>' +
+            '<div class="tarj-nom">' + esc(nombre) + '</div>' +
+            (JotaPase.ticketsExtra(l.nivel) ? '<div class="tarj-tk">' + esc(JotaPase.textoTickets(JotaPase.ticketsExtra(l.nivel))) + '</div>' : '') +
+            '<div class="tarj-pie">' + pie + '</div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  let redibujo = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(redibujo);
+    redibujo = setTimeout(function () {
+      const cont = $('camino');
+      if (columnas(cont.clientWidth || window.innerWidth) !== colsPintadas) pintarCamino();
+    }, 150);
+  });
+
+  let nivelEnModal = null;
+  let opcionElegida = null;
+
+  $('camino').addEventListener('click', function (e) {
+    const bR = e.target.closest('[data-reclamar]');
+    if (bR) { reclamar(Number(bR.dataset.reclamar)); return; }
+    const bE = e.target.closest('[data-elegir]');
+    if (bE) { abrirEleccion(Number(bE.dataset.elegir)); return; }
+  });
+
+  function reclamar(nivel) {
+    if (!activo || ESTADO.reclamados.indexOf(nivel) !== -1) return;
+    if (!JotaPase.puedeReclamar(nivel, ESTADO.jp, ESTADO)) return;
+
+    const l = JotaPase.NIVELES.find(x => x.nivel === nivel);
+    const da = l && l.da;
+    const antesHh = ESTADO.hhHasta;
+
+    ESTADO.reclamados.push(nivel);
+    ESTADO.cuando[nivel] = new Date().toISOString();
+    if (da && da.happyHour && !ESTADO.hhHasta) {
+      ESTADO.hhHasta = new Date(Date.now() + JotaPase.ECONOMIA.hhHoras * 3600000).toISOString();
+    }
+
+    recalcularJp();
+    pintarProgreso();
+    pintarCamino();
+    if (da && da.happyHour) abrirHappyHour();
+    else aviso('Reclamaste: ' + (l ? l.nombre : 'nivel ' + nivel)
+      + (JotaPase.ticketsExtra(nivel) ? ' · ' + JotaPase.textoTickets(JotaPase.ticketsExtra(nivel)) : ''));
+
+    window.JotaPasePagina.alGuardar(ESTADO, function (ok, mensaje) {
+      if (ok) return;
+      const i = ESTADO.reclamados.indexOf(nivel);
+      if (i !== -1) ESTADO.reclamados.splice(i, 1);
+      delete ESTADO.cuando[nivel];
+      ESTADO.hhHasta = antesHh;
+      cerrarHappyHour();
+      recalcularJp(); pintarProgreso(); pintarCamino();
+      aviso(mensaje || 'No se pudo guardar. Probá de nuevo en un rato.');
+    }, nivel);
+  }
+
+  function abrirEleccion(nivel) {
+    const l = JotaPase.NIVELES.find(x => x.nivel === nivel);
+    if (!l || !l.opciones) return;
+    nivelEnModal = nivel;
+    opcionElegida = null;
+
+    $('modalTitulo').textContent = 'Nivel ' + nivel + ': elegí tu recompensa';
+    $('modalOps').innerHTML = l.opciones.map(function (o, i) {
+      return '<button class="op" type="button" aria-pressed="false" data-op="' + i + '">' +
+               '<span class="op-ic">' + JotaPase.svg(o.tipo, 26) + '</span>' +
+               '<span class="op-nom">' + esc(o.nombre) + '</span>' +
+             '</button>';
+    }).join('');
+    $('btnConfirmar').disabled = true;
+    $('modalEleccion').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  $('modalOps').addEventListener('click', function (e) {
+    const b = e.target.closest('[data-op]');
+    if (!b) return;
+    opcionElegida = Number(b.dataset.op);
+    Array.prototype.forEach.call($('modalOps').children, function (el, i) {
+      const on = i === opcionElegida;
+      el.classList.toggle('on', on);
+      el.setAttribute('aria-pressed', String(on));
+    });
+    $('btnConfirmar').disabled = false;
+  });
+
+  $('btnConfirmar').addEventListener('click', function () {
+    if (opcionElegida === null || nivelEnModal === null) return;
+    const l = JotaPase.NIVELES.find(x => x.nivel === nivelEnModal);
+    const op = l.opciones[opcionElegida];
+    const nivel = nivelEnModal;
+    ESTADO.elegidos[nivel] = op.id;
+    if (ESTADO.reclamados.indexOf(nivel) === -1) ESTADO.reclamados.push(nivel);
+    ESTADO.cuando[nivel] = new Date().toISOString();
+    cerrarEleccion();
+    recalcularJp();
+    pintarProgreso();
+    pintarCamino();
+    aviso('Elegiste: ' + op.nombre);
+    window.JotaPasePagina.alGuardar(ESTADO, function (ok, mensaje) {
+      if (ok) return;
+      delete ESTADO.elegidos[nivel];
+      delete ESTADO.cuando[nivel];
+      const i = ESTADO.reclamados.indexOf(nivel);
+      if (i !== -1) ESTADO.reclamados.splice(i, 1);
+      recalcularJp(); pintarProgreso(); pintarCamino();
+      aviso(mensaje || 'No se pudo guardar. Probá de nuevo en un rato.');
+    }, nivel, op.id);
+  });
+
+  function cerrarEleccion() {
+    $('modalEleccion').classList.remove('open');
+    document.body.style.overflow = '';
+    nivelEnModal = null;
+    opcionElegida = null;
+  }
+  window.cerrarEleccion = cerrarEleccion;
+  $('modalEleccion').addEventListener('click', function (e) {
+    if (e.target === $('modalEleccion')) cerrarEleccion();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    cerrarEleccion(); cerrarHappyHour();
+  });
+
+  $('modalEleccion').querySelector('.modal-x').innerHTML = JotaPase.svg('cerrar', 14, 2);
+
+  function abrirHappyHour() {
+    const E = JotaPase.ECONOMIA;
+    const hasta = JotaPase.aFecha(ESTADO.hhHasta);
+    $('hhMult').textContent = String(E.hhMultiplicador).replace('.', ',') + '×';
+    $('hhHoras').textContent = E.hhHoras + ' horas';
+    $('hhFin').textContent = hasta
+      ? hasta.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }) + ' a las '
+        + hasta.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' hs'
+      : '—';
+    const nivelHh = JotaPase.NIVELES.find(x => x.da && x.da.happyHour);
+    const tkHh = nivelHh ? JotaPase.ticketsExtra(nivelHh.nivel) : 0;
+    $('hhTickets').textContent = tkHh ? 'Además sumaste ' + JotaPase.textoTickets(tkHh) + '.' : '';
+    $('modalHappy').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function cerrarHappyHour() {
+    $('modalHappy').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  window.cerrarHappyHour = cerrarHappyHour;
+  $('modalHappy').addEventListener('click', function (e) {
+    if (e.target === $('modalHappy')) cerrarHappyHour();
+  });
+
+  function aviso(texto) {
+    const t = $('toast');
+    t.textContent = texto;
+    t.className = 'toast show';
+    setTimeout(function () { t.classList.remove('show'); }, 2600);
+  }
+
+  window.JotaPasePagina = {
+    demo: DEMO,
+    estadoDeEjemplo: estadoDeEjemplo,
+    setEstado: function (e, puedeReclamar, noSePudo) {
+      ESTADO = { jp: 0, gasto: 0, jpExtra: 0, ordenes: [], reclamados: [], elegidos: {},
+                 cuando: {}, hhHasta: null, temporada: null, ...(e || {}) };
+      activo = !!puedeReclamar;
+      fallo = !activo && !!noSePudo;
+      pintarProgreso();
+      pintarCamino();
+    },
+    alGuardar: function () {},
+  };
+
+  if (DEMO) { ESTADO = estadoDeEjemplo(Number(params.get('jp') || 340)); activo = true; }
+  pintarProgreso();
+  pintarCamino();
+})();
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs }
+  from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyC2h9G0Z-2kMnzpm9njmbgvh8CDJVsIW8k",
+  authDomain: "jota-store.firebaseapp.com",
+  projectId: "jota-store",
+  storageBucket: "jota-store.firebasestorage.app",
+  messagingSenderId: "513903959883",
+  appId: "1:513903959883:web:b28be406ba0ec4ffb492ce",
+});
+const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let currentUser = null;
+
+async function leerEstado(user) {
+  const pag = window.JotaPasePagina;
+  if (pag.demo) {
+    return pag.estadoDeEjemplo(Number(new URLSearchParams(location.search).get('jp') || 74));
+  }
+  if (!user) return { jp: 0, reclamados: [], elegidos: {}, cuando: {} };
+
+  const [fichaSnap, ordSnap, recSnap] = await Promise.all([
+    getDoc(doc(db, 'users', user.uid)),
+    getDocs(query(collection(db, 'orders'), where('user_uid', '==', user.uid))),
+    getDocs(collection(db, 'users', user.uid, 'reclamos')),
+  ]);
+  const ficha = fichaSnap.exists() ? fichaSnap.data() : {};
+  const ordenes = [];
+  ordSnap.forEach(d => ordenes.push(d.data()));
+  ficha._reclamos = [];
+  recSnap.forEach(d => ficha._reclamos.push(d.data()));
+
+  const e = JotaPase.estadoDe(ficha, ordenes, user.uid);
+  return {
+    jp: e.jp, gasto: e.gasto, ordenes,
+    temporada: e.temporada, hhHasta: e.pase.hh_hasta || null,
+    reclamados: e.reclamados, elegidos: e.elegidos,
+    cuando: (e.pase && e.pase.cuando) || {},
+    jpExtra: JotaPase.jpRegaloDe(ficha, e.temporada.id, e.temporada.id),
+  };
+}
+
+async function guardarEstado(user, estado, listo, nivel, eleccion) {
+  const pag = window.JotaPasePagina;
+  if (pag.demo || !user) { if (listo) listo(true); return; }
+  try {
+    const temp = (estado.temporada && estado.temporada.id) || JotaPase.temporadaDe(new Date()).id;
+    const n = Number(nivel);
+    if (!n) throw new Error('falta el nivel');
+    const r = await fetch('/api/reclamar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: await user.getIdToken(), nivel: n, eleccion: eleccion || null }),
+    }).catch(() => null);
+    if (r && r.status !== 404 && r.status !== 405 && r.status < 500) {
+      const d = await r.json().catch(() => null);
+      if (listo) listo(!!(r.ok && d && d.ok), r.ok ? '' : (d && d.mensaje) || '');
+      return;
+    }
+    await setDoc(doc(db, 'users', user.uid, 'reclamos', temp + '_' + n), {
+      temp, nivel: n, eleccion: eleccion || null, cuando: serverTimestamp(),
+    });
+    if (listo) listo(true);
+  } catch (e) {
+    console.error('[pase] no se pudo guardar lo reclamado:', e);
+    if (listo) listo(false);
+  }
+}
+
+const configListo = (async () => {
+  try {
+    const snap = await getDoc(doc(db, 'config', 'battlepass'));
+    if (snap.exists()) JotaPase.aplicarConfig(snap.data());
+  } catch (e) {
+    console.warn('[pase] No se pudo cargar la configuración:', e);
+  }
+})();
+
+window.JotaPasePagina.alGuardar = (estado, listo, nivel, eleccion) =>
+  guardarEstado(currentUser, estado, listo, nivel, eleccion);
+
+function updateAuthUI() {
+  const btn = $('authBtn'), menu = $('userMenu'), mail = $('userMenuEmail');
+  if (currentUser) {
+    btn.classList.remove('login');
+    const nombre = currentUser.displayName || (currentUser.email || 'Cliente').split('@')[0];
+    const av = JotaAvatar.html(JotaAvatar.deUsuario(currentUser.uid), nombre, 'jav-nav');
+    btn.innerHTML = av + ' <span class="name">' + esc(nombre) + '</span>';
+    mail.textContent = currentUser.email;
+  } else {
+    btn.classList.add('login'); btn.innerHTML = 'Ingresar'; menu.classList.remove('open');
+  }
+}
+window.handleAuthClick = function(){ currentUser ? $('userMenu').classList.toggle('open') : signInWithGoogle(); };
+window.signInWithGoogle = async function(){ try { await signInWithPopup(auth, googleProvider); } catch(_){} };
+window.signOutUser = async function(){ await signOut(auth); $('userMenu').classList.remove('open'); };
+document.addEventListener('click', e => {
+  const w = document.querySelector('.auth-wrapper');
+  if (w && !w.contains(e.target)) $('userMenu').classList.remove('open');
+});
+
+onAuthStateChanged(auth, async (u) => {
+  currentUser = u;
+  updateAuthUI();
+  try {
+    await configListo;
+    window.JotaPasePagina.setEstado(await leerEstado(u), !!u || window.JotaPasePagina.demo);
+  } catch (e) {
+    console.error('[pase] no se pudo leer la ficha del cliente:', e);
+    window.JotaPasePagina.setEstado({ jp: 0, reclamados: [], elegidos: {} }, false, !!u);
+  }
+});
+</script>
+
+</body>
+</html>
