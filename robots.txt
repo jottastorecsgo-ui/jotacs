@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jotaweb.pages.dev/sitemap.xml
+Sitemap: https://jotastorecs.com/sitemap.xml
