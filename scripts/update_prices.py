@@ -27,6 +27,10 @@ DEFAULTS = {
 GUARDA_MIN_ITEMS = 200
 GUARDA_MAX_SIN_PRECIO = 0.4
 
+UMBRAL_CAMBIO_PRECIO = 0.02
+LIMITE_ESCRITURAS_REFRESCO = 300
+LIMITE_ESCRITURAS_COMPLETO = 3000
+
 TRAMOS_MAX = 20
 TRAMO_HASTA_MAX = 1000000
 TRAMO_MULT_MIN = 1
@@ -527,7 +531,53 @@ def write_catalog_snapshot(db, items):
     return len(chunks)
 
 
-def write_to_firestore(db, items, is_full_scan, by_cat, previo=None):
+def cambio_de(antes, item, completo):
+    if not antes:
+        return math.inf
+    precio_antes = float(antes.get("final_price_usdt") or 0)
+    if precio_antes <= 0:
+        return math.inf
+    misma_meta = (
+        (antes.get("market_hash_name") or "") == (item.get("market_hash_name") or "")
+        and (antes.get("category") or "") == (item.get("category") or "")
+        and (antes.get("wear") or None) == (item.get("wear") or None)
+        and (antes.get("image_url") or "") == (item.get("image_url") or "")
+        and bool(antes.get("is_stattrak")) == bool(item.get("is_stattrak"))
+    )
+    if not misma_meta:
+        return math.inf
+    diferencia = abs(float(item["final_price_usdt"]) - precio_antes)
+    if diferencia < 0.005:
+        return None
+    relativo = diferencia / precio_antes
+    if not completo and relativo < UMBRAL_CAMBIO_PRECIO:
+        return None
+    return relativo
+
+
+def conservado(item, antes):
+    return {
+        **item,
+        "final_price_usdt": antes.get("final_price_usdt"),
+        "youpin_price_usd": antes.get("youpin_price_usd"),
+    }
+
+
+def huella_precios(cfg):
+    return json.dumps({"global": cfg["global_multiplier"], "tramos": cfg.get("tramos_precio") or []}, sort_keys=True)
+
+
+def config_cambio(db, huella):
+    try:
+        doc = db.collection("config").document("last_update").get()
+        guardada = (doc.to_dict() or {}).get("huella_precios") if doc.exists else None
+    except Exception as e:
+        print(f"  error leyendo la configuracion anterior: {e}")
+        return False
+    return guardada != huella
+
+
+def write_to_firestore(db, items, is_full_scan, by_cat, previo=None, completo=False, huella=None):
     print("[6/6] guardando en firestore...")
     coll = db.collection("prices")
     previo = previo or {}
@@ -550,27 +600,34 @@ def write_to_firestore(db, items, is_full_scan, by_cat, previo=None):
             print("  no salio ningun item del catalogo")
 
     print("  escribiendo solo lo que cambio...")
-    batch = db.batch()
-    n = 0
-    written = 0
+    pendientes = []
+    publicados = []
     igual = 0
     for item in items:
         doc_id = str(item["item_id"])
         antes = previo.get(doc_id) or previo.get(item["item_id"])
-        if antes:
-            mismo_precio = abs(float(antes.get("final_price_usdt") or 0) - float(item["final_price_usdt"])) < 0.005
-            mismo_stock = int(antes.get("youpin_quantity") or 0) == int(item.get("youpin_quantity") or 0)
-            misma_meta = (
-                (antes.get("market_hash_name") or "") == (item.get("market_hash_name") or "")
-                and (antes.get("category") or "") == (item.get("category") or "")
-                and (antes.get("wear") or None) == (item.get("wear") or None)
-                and (antes.get("image_url") or "") == (item.get("image_url") or "")
-                and bool(antes.get("is_stattrak")) == bool(item.get("is_stattrak"))
-            )
-            if mismo_precio and mismo_stock and misma_meta:
-                igual += 1
-                continue
-        batch.set(coll.document(doc_id), item, merge=True)
+        cambio = cambio_de(antes, item, completo)
+        if cambio is None:
+            igual += 1
+            publicados.append(conservado(item, antes))
+        else:
+            pendientes.append((cambio, doc_id, item, antes))
+
+    pendientes.sort(key=lambda p: -p[0])
+    limite = LIMITE_ESCRITURAS_COMPLETO if is_full_scan else LIMITE_ESCRITURAS_REFRESCO
+    if not completo and len(pendientes) > limite:
+        print(f"  {len(pendientes) - limite} cambios quedan para la proxima vuelta")
+        for _, _, item, antes in pendientes[limite:]:
+            if antes:
+                publicados.append(conservado(item, antes))
+        pendientes = pendientes[:limite]
+
+    batch = db.batch()
+    n = 0
+    written = 0
+    for _, doc_id, item, _ in pendientes:
+        batch.set(coll.document(doc_id), {k: v for k, v in item.items() if v is not None}, merge=True)
+        publicados.append(item)
         n += 1
         if n >= 500:
             batch.commit()
@@ -583,7 +640,7 @@ def write_to_firestore(db, items, is_full_scan, by_cat, previo=None):
         written += n
     print(f"  escritos: {written} · sin cambios (no se tocaron): {igual}")
 
-    write_catalog_snapshot(db, items)
+    write_catalog_snapshot(db, publicados)
 
     update_data = {
         "timestamp": firestore.SERVER_TIMESTAMP,
@@ -593,6 +650,8 @@ def write_to_firestore(db, items, is_full_scan, by_cat, previo=None):
     }
     if is_full_scan:
         update_data["last_full_scan"] = firestore.SERVER_TIMESTAMP
+    if huella:
+        update_data["huella_precios"] = huella
     
     db.collection("config").document("last_update").set(update_data, merge=True)
     
@@ -688,7 +747,11 @@ def main():
         })
         sys.exit(1)
     
-    written = write_to_firestore(db, final_items, is_full, by_cat, previo=existing)
+    huella = huella_precios(cfg)
+    completo = config_cambio(db, huella)
+    if completo:
+        print("  cambio la configuracion de precios: se actualizan todos los precios")
+    written = write_to_firestore(db, final_items, is_full, by_cat, previo=existing, completo=completo, huella=huella)
     print(f"\nlisto: {written} items en firestore")
 
 if __name__ == "__main__":
