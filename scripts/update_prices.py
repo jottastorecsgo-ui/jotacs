@@ -20,11 +20,6 @@ DEFAULTS = {
     "min_usd": 2.0,
     "max_usd": 1498.0,
     "min_stock": 3,
-    "usdt_spread": 1.05,
-    "markup_weapon": 1.15,
-    "markup_knife_gloves": 1.12,
-    "markup_agent": 1.20,
-    "markup_collectible": 1.20,
     "global_multiplier": 1.0,
 }
 
@@ -366,7 +361,7 @@ def fetch_youpin_prices(item_ids):
             quotes = it.get("quotes", [])
             yp = next((q for q in quotes if q.get("provider") == "buff163"), None)
             if yp:
-                prices[it["item_id"]] = {
+                prices[str(it["item_id"])] = {
                     "lowest_ask": yp.get("lowest_ask"),
                     "quantity": yp.get("quantity"),
                     "last_updated": yp.get("last_updated"),
@@ -403,7 +398,7 @@ def filter_and_price(candidates, prices, cfg):
 
     for item_id, info in candidates.items():
         cat = info["category"]
-        p = prices.get(item_id)
+        p = prices.get(str(item_id))
         if not p:
             bump("sin_precio", cat)
             continue
@@ -421,19 +416,10 @@ def filter_and_price(candidates, prices, cfg):
         if ask > max_cents:
             bump("price_high", cat)
             continue
-        
-        if cat in ("knife", "gloves"):
-            markup = cfg["markup_knife_gloves"]
-        elif cat == "agent":
-            markup = cfg["markup_agent"]
-        elif cat in ("sticker", "charm", "musickit", "patch", "graffiti"):
-            markup = cfg["markup_collectible"]
-        else:
-            markup = cfg["markup_weapon"]
-        
+
         ask_usd = ask / 100.0
         mult = multiplicador_de(ask_usd, cfg)
-        final_usdt = round(ask_usd * markup * mult * cfg["usdt_spread"], 2)
+        final_usdt = round(ask_usd * mult, 2)
         
         final_items.append({
             **info,
@@ -441,7 +427,7 @@ def filter_and_price(candidates, prices, cfg):
             "youpin_price_cents": ask,
             "youpin_quantity": qty,
             "youpin_last_updated": p.get("last_updated"),
-            "markup_applied": round(markup * mult, 4),
+            "markup_applied": round(mult, 4),
             "final_price_usdt": final_usdt,
             "updated_at": firestore.SERVER_TIMESTAMP,
         })
@@ -650,6 +636,8 @@ def main():
             existing = fetch_existing_catalog(db)
         candidates = {}
         for item_id, data in existing.items():
+            if isinstance(item_id, str) and item_id.isdigit():
+                item_id = int(item_id)
             candidates[item_id] = {
                 "item_id": item_id,
                 "market_hash_name": data.get("market_hash_name", ""),
