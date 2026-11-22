@@ -5,6 +5,7 @@ import json
 import math
 import urllib.request
 import urllib.error
+import urllib.parse
 import gzip
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -72,13 +73,14 @@ def multiplicador_de(costo, cfg):
     return elegido["multiplicador"] if elegido else cfg["global_multiplier"]
 
 
-COLLECTIBLE_TYPES = {
-    "Sticker":  "sticker",
-    "Charm":    "charm",
-    "MusicKit": "musickit",
-    "Patch":    "patch",
-    "Graffiti": "graffiti",
-}
+COLLECTIBLE_TYPES = [
+    ("Sticker",     None,  "sticker"),
+    ("Charm",       None,  "charm"),
+    ("Music Kit",   None,  "musickit"),
+    ("Collectible", "Pin", "pin"),
+    ("Patch",       None,  "patch"),
+    ("Graffiti",    None,  "graffiti"),
+]
 
 EXCLUDE_WEAPON_TYPES = {"Machinegun"}
 EXCLUDE_NAMES = {"Zeus x27"}
@@ -268,12 +270,15 @@ def fetch_full_catalog():
         offset += len(items)
     print(f"  {agent_count} agents")
 
-    for api_type, cat_name in COLLECTIBLE_TYPES.items():
-        print(f"  {api_type.lower()}s...")
+    for api_type, subtipo, cat_name in COLLECTIBLE_TYPES:
+        print(f"  {cat_name}s...")
         offset = 0
         count = 0
         while True:
-            code, data = http("GET", f"/items?item_type={api_type}&limit=500&offset={offset}")
+            params = {"item_type": api_type, "limit": 500, "offset": offset}
+            if subtipo:
+                params["item_subtype"] = subtipo
+            code, data = http("GET", "/items?" + urllib.parse.urlencode(params, quote_via=urllib.parse.quote))
             items = data.get("items", [])
             if not items:
                 break
@@ -288,7 +293,7 @@ def fetch_full_catalog():
                     "rarity": it.get("rarity_name"),
                     "rarity_color": it.get("rarity_color"),
                     "image_url": it.get("image_url"),
-                    "is_stattrak": False,
+                    "is_stattrak": bool(it.get("is_stattrak")),
                     "weapon_type": None,
                     "base_name": it.get("base_name"),
                     "skin_name": it.get("skin_name"),
@@ -298,7 +303,7 @@ def fetch_full_catalog():
             if not pag.get("has_next"):
                 break
             offset += len(items)
-        print(f"  {count} {api_type.lower()}s")
+        print(f"  {count} {cat_name}s")
 
     return candidates
 

@@ -1286,7 +1286,7 @@ const CATEGORIAS_OCULTAS = ["sticker", "patch", "graffiti"];
 
 const ARMAS_RAIL = [
   "AK-47", "M4A1-S", "M4A4", "AWP", "Galil AR", "FAMAS", "SSG 08",
-  "USP-S", "Glock-18", "Desert Eagle", "P250", "MAC-10", "MP9",
+  "USP-S", "Glock-18", "Desert Eagle", "MAC-10", "MP9",
 ];
 function armasSinContar() { return ARMAS_RAIL.map(w => armaDelRiel(w, null, 0)); }
 
@@ -1296,7 +1296,7 @@ const ICONO_POR_CAT = {
 };
 const ICONO_POR_ARMA = {
   "AWP": "ic-sniper", "SSG 08": "ic-sniper",
-  "USP-S": "ic-pistola", "Glock-18": "ic-pistola", "Desert Eagle": "ic-pistola", "P250": "ic-pistola",
+  "USP-S": "ic-pistola", "Glock-18": "ic-pistola", "Desert Eagle": "ic-pistola",
   "MAC-10": "ic-smg", "MP9": "ic-smg",
 };
 const armaDelRiel = (w, cat, n) => ({ id: "w:" + w, label: w, icon: ICONO_POR_CAT[cat] || ICONO_POR_ARMA[w] || "ic-rifle", weapon: w, count: n });
@@ -1823,7 +1823,7 @@ function splitName(name) {
 const CAT_LABEL = {
   knife:'Cuchillo', gloves:'Guantes', rifle:'Rifle', sniper:'Sniper', pistol:'Pistola',
   smg:'SMG', shotgun:'Escopeta', agent:'Agente', sticker:'Sticker', charm:'Charm',
-  musickit:'Music Kit', patch:'Parche', graffiti:'Graffiti',
+  musickit:'Music Kit', pin:'Pin', patch:'Parche', graffiti:'Graffiti',
 };
 function categoryLabel(c) { return CAT_LABEL[c] || c || ''; }
 
