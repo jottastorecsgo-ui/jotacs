@@ -466,6 +466,7 @@
     gap: 12px;
   }
   .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .vt-mostrar { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 12px; }
   .vt-mostrar input { width: auto; margin: 0; }
   .vt-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 14px; }
@@ -646,6 +647,7 @@
     .topbar input[type="search"] { min-width: 120px; }
     input, select, textarea { font-size: 16px; }
     .form-row-2 { grid-template-columns: 1fr; }
+    .form-row-3 { grid-template-columns: 1fr; }
     .pr-vista { grid-template-columns: 1fr; }
     .raffle-card { grid-template-columns: 60px 1fr auto; gap: 10px; }
     .detail-panel { width: 100vw; }
@@ -1002,10 +1004,14 @@
     <div class="content" style="padding: 20px; max-width: 800px;">
       <div class="detail-section">
         <h3>Configuración de precios</h3>
-        <div class="form-row-2" style="max-width:500px;margin-bottom:12px">
+        <div class="form-row-3" style="max-width:750px;margin-bottom:12px">
           <div>
             <label>Multiplicador global (%)</label>
             <input type="number" id="cfgGlobalMultiplier" min="50" max="300" step="1" value="100" style="width:100%">
+          </div>
+          <div>
+            <label>Precio mínimo a importar (USD)</label>
+            <input type="number" id="cfgMinUsd" min="0" step="0.1" value="2" style="width:100%">
           </div>
           <div>
             <label>Precio máximo a importar (USD)</label>
@@ -3838,6 +3844,9 @@ async function loadConfig() {
     if (cfg.global_multiplier !== undefined) {
       document.getElementById('cfgGlobalMultiplier').value = Math.round(cfg.global_multiplier * 100);
     }
+    if (cfg.min_usd !== undefined) {
+      document.getElementById('cfgMinUsd').value = cfg.min_usd;
+    }
     if (cfg.max_usd !== undefined) {
       document.getElementById('cfgMaxUsd').value = cfg.max_usd;
     }
@@ -4604,15 +4613,18 @@ pintarTramosVista();
 
 window.saveSettings = async function() {
   const multPct = parseFloat(document.getElementById('cfgGlobalMultiplier').value);
+  const minUsd = parseFloat(document.getElementById('cfgMinUsd').value);
   const maxUsd = parseFloat(document.getElementById('cfgMaxUsd').value);
   if (!isFinite(multPct) || multPct < 50 || multPct > 300) { showToast('Multiplicador inválido (50–300%).', true); return; }
-  if (!isFinite(maxUsd) || maxUsd < 0) { showToast('Precio máximo inválido.', true); return; }
+  if (!isFinite(minUsd) || minUsd < 0) { showToast('Precio mínimo inválido.', true); return; }
+  if (!isFinite(maxUsd) || maxUsd <= minUsd) { showToast('El precio máximo tiene que ser mayor que el mínimo.', true); return; }
   if (!configPreciosLeida) { showToast('No se pudo leer la configuración guardada. Recargá la página antes de guardar.', true); return; }
   const { tramos, error } = leerTramosFormulario();
   if (error) { showToast(error, true); return; }
   try {
     await setDoc(doc(db, 'config', 'settings'), {
       global_multiplier: multPct / 100,
+      min_usd: minUsd,
       max_usd: maxUsd,
       tramos_precio: tramos,
     }, { merge: true });

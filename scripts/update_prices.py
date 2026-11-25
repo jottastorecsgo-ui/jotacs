@@ -567,17 +567,20 @@ def huella_precios(cfg):
     return json.dumps({"global": cfg["global_multiplier"], "tramos": cfg.get("tramos_precio") or []}, sort_keys=True)
 
 
-def config_cambio(db, huella):
+def huella_rango(cfg):
+    return json.dumps({"min": float(cfg["min_usd"]), "max": float(cfg["max_usd"])}, sort_keys=True)
+
+
+def leer_ultima_actualizacion(db):
     try:
         doc = db.collection("config").document("last_update").get()
-        guardada = (doc.to_dict() or {}).get("huella_precios") if doc.exists else None
+        return (doc.to_dict() or {}) if doc.exists else {}
     except Exception as e:
         print(f"  error leyendo la configuracion anterior: {e}")
-        return False
-    return guardada != huella
+        return None
 
 
-def write_to_firestore(db, items, is_full_scan, by_cat, previo=None, completo=False, huella=None):
+def write_to_firestore(db, items, is_full_scan, by_cat, previo=None, completo=False, huella=None, rango=None):
     print("[6/6] guardando en firestore...")
     coll = db.collection("prices")
     previo = previo or {}
@@ -652,6 +655,8 @@ def write_to_firestore(db, items, is_full_scan, by_cat, previo=None, completo=Fa
         update_data["last_full_scan"] = firestore.SERVER_TIMESTAMP
     if huella:
         update_data["huella_precios"] = huella
+    if rango:
+        update_data["rango_precios"] = rango
     
     db.collection("config").document("last_update").set(update_data, merge=True)
     
@@ -683,9 +688,17 @@ def main():
         return
 
     cfg = load_settings(db)
+    ultima = leer_ultima_actualizacion(db)
+    huella = huella_precios(cfg)
+    rango = huella_rango(cfg)
+    completo = ultima is not None and ultima.get("huella_precios") != huella
+    cambio_rango = bool(ultima) and ultima.get("rango_precios") not in (None, rango)
 
     print("[3/6] modo")
     is_full = should_full_scan(db, force_full)
+    if not is_full and cambio_rango:
+        print("  cambio el rango de precios: se revisa el catalogo completo")
+        is_full = True
     print(f"  modo: {'FULL SCAN' if is_full else 'REFRESH'}")
     
     print("[4/6] candidatos + precios")
@@ -747,11 +760,9 @@ def main():
         })
         sys.exit(1)
     
-    huella = huella_precios(cfg)
-    completo = config_cambio(db, huella)
     if completo:
         print("  cambio la configuracion de precios: se actualizan todos los precios")
-    written = write_to_firestore(db, final_items, is_full, by_cat, previo=existing, completo=completo, huella=huella)
+    written = write_to_firestore(db, final_items, is_full, by_cat, previo=existing, completo=completo, huella=huella, rango=rango)
     print(f"\nlisto: {written} items en firestore")
 
 if __name__ == "__main__":
